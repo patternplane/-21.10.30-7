@@ -164,3 +164,43 @@ void cerase(polyNode** list) {
 
 	*list = nullptr;
 }
+
+polyNode* create_polynomial(const char* name) {
+
+	const char* name_result;
+	if (name == NULL)
+		name_result = "UntitledPoly";
+
+	int expon;
+	double coef;
+
+	polyNode** attach_pos;
+	polyNode* newNode;
+
+	polyNode* newPoly = (polyNode*)malloc(sizeof(polyNode));
+	if (newPoly == nullptr) {
+		fprintf(stderr, "메모리공간을 확보할 수 없었습니다.\n");
+		exit(1);
+	}
+
+	newPoly->next = newPoly;
+	newPoly->expon = -1;
+	newPoly->coef = -1.0;
+
+	attach_pos = &(newPoly->next);
+	while (true) {
+		printf("%s(x) 다항식을 입력하세요.(계수 지수) : ", name_result);
+		scanf_s("%lf %d", &coef, &expon);
+
+		if (expon < 0)
+			break;
+
+		newNode = get_node();
+		newNode->expon = expon;
+		newNode->coef = coef;
+
+		list_attach(attach_pos, newNode);
+		attach_pos = &((*attach_pos)->next); // 이와 같은 코드 : attach_pos = &(newNode->next)
+	}
+
+}
