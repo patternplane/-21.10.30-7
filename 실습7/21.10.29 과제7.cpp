@@ -107,3 +107,18 @@ void main() {
 
 
 // ¡á ±¸ÇöºÎ
+
+void list_attach(polyNode** list, polyNode* node) {
+
+
+	if (*list == nullptr) {
+		node->next = node;
+		*list = node;
+	}
+	else {
+		node->next = (*list)->next;
+		(*list)->next = node;
+		*list = node;
+	}
+
+}
