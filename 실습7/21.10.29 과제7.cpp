@@ -1,11 +1,9 @@
 // 과제 7부터는 github로 옮깁니다.
 
-/*
-* - author	BaekSeongSoo
-* - date	2021/10/29 10:46:42
+/**
+* @author 백성수
+* @studentId 22012070
 */
-
-
 
 
 
@@ -64,8 +62,6 @@ void main() {
 
 
 }
-
-
 
 
 
