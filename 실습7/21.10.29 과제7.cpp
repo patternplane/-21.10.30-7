@@ -5,7 +5,8 @@
 * @studentId 22012070
 */
 
-
+#include <stdlib.h>
+#include <stdio.h>
 
 // ■ 헤더
 
@@ -27,7 +28,7 @@ void list_attach(polyNode** list, polyNode* node);
 
 // ● 2. 가용연결리스트 저장소와 그 연산
 
-polyNode* avail;
+polyNode* avail = nullptr;
 
 /**
 * 새로운 노드를 생성하여 반환합니다.
@@ -121,4 +122,43 @@ void list_attach(polyNode** list, polyNode* node) {
 		*list = node;
 	}
 
+}
+
+polyNode* get_node() {
+
+	polyNode* tmp;
+
+	if (avail == nullptr) {
+
+		tmp = (polyNode*)malloc(sizeof(polyNode));
+		if (tmp == nullptr) {
+			fprintf(stderr,"메모리공간을 확보할 수 없었습니다.\n");
+			exit(1);
+		}
+
+	}
+	else {
+
+		tmp = avail;
+		avail = avail->next;
+
+	}
+
+	return tmp;
+
+}
+
+void ret_node(polyNode* node) {
+
+	node->next = avail;
+	avail = node;
+}
+
+void cerase(polyNode** list) {
+
+	polyNode* tmp = (*list)->next;
+	(*list)->next = avail;
+	avail = tmp;
+
+	*list = nullptr;
 }
