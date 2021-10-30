@@ -41,7 +41,7 @@ polyNode* get_node();
 * 
 * @param node 가용연결리스트에 붙일 노드를 가리키는 노드 포인터
 */
-void let_node(polyNode* node);
+void ret_node(polyNode* node);
 
 /**
 * 원형 연결리스트 전체를 가용연결리스트에 붙입니다.
@@ -75,7 +75,7 @@ polyNode* cpadd(polyNode* a, polyNode* b);
 * @param poly 다항식을 가리키는 노드 포인터
 * @param singlePoly 곱할 단일항을 가리키는 노드 변수
 */
-void single_nul(polyNode* poly, polyNode singlePoly);
+void single_mul(polyNode* poly, polyNode* singlePoly);
 
 /**
 * 두 다항식의 곱
