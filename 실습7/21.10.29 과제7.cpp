@@ -19,12 +19,12 @@ typedef struct polyNode {
 }polyNode;
 
 /**
-* 특정 노드를 리스트의 가장 뒤에 붙여줍니다.
+* 특정 노드를 특정 노드포인터 변수에 붙여줍니다.
 * 
-* @param list 노드를 이어붙일 리스트를 가리키는 노드 포인터 변수의 포인터
+* @param nodePtr 노드를 이어붙일 노드 포인터 변수의 포인터
 * @param node 리스트에 이어붙일 노드를 가리키는 포인터
 */
-void list_attach(polyNode** list, polyNode* node);
+void list_attach(polyNode** nodePtr, polyNode* node);
 
 // ● 2. 가용연결리스트 저장소와 그 연산
 
@@ -55,10 +55,12 @@ void cerase(polyNode** list);
 
 /**
 * 사용자 입력을 받아 다항식을 생성하여 반환합니다.
+* 사용자 입력 실수에 관한 오류는 처리하지 않습니다.
 * 
+* @param name 다항식의 이름을 입력받습니다. (비우려면 null 기입)
 * @return 생성된 다항식을 가리키는 노드 포인터
 */
-polyNode* create_polynomial();
+polyNode* create_polynomial(const char* name);
 
 // ● 4. 다항식의 연산
 
