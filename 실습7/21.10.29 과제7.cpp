@@ -266,3 +266,20 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 
 	return c;
 }
+
+polyNode* single_mul(polyNode* poly, polyNode* singlePoly) {
+	
+	polyNode* c, * cRear;
+	c = get_node();
+	c->next = c;
+	c->expon = -1;
+	cRear = c;
+
+	polyNode* current_poly = poly->next;
+	while (current_poly != poly) {
+		pAttach(&cRear,current_poly->coef * singlePoly->coef,current_poly->expon + singlePoly->expon);
+		current_poly = poly->next;
+	}
+
+	return c;
+}
