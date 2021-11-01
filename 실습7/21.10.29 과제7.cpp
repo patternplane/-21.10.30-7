@@ -304,3 +304,15 @@ polyNode* cpmul(polyNode* a, polyNode* b) {
 
 	return c;
 }
+
+void print_polynomial(polyNode* list) {
+
+	polyNode* current_poly = list->next;
+	polyNode* startNode = list;
+
+	printf("■ 다항식을 출력합니다 : \n");
+	printf("계수 | 지수\n");
+	while (current_poly != startNode)
+		printf("%4.3f | %4d\n",current_poly->coef, current_poly->expon);
+
+}
