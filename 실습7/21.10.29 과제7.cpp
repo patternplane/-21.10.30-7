@@ -165,11 +165,13 @@ void cerase(polyNode** list) {
 	*list = nullptr;
 }
 
-polyNode* create_polynomial(const char* name) {
+polyNode* create_polynomial(const char* name_input) {
 
-	const char* name_result;
-	if (name == NULL)
-		name_result = "UntitledPoly";
+	const char* name;
+	if (name_input == NULL)
+		name = "UntitledPoly";
+	else
+		name = name_input;
 
 	int expon;
 	double coef;
@@ -189,7 +191,7 @@ polyNode* create_polynomial(const char* name) {
 
 	attach_pos = &(newPoly->next);
 	while (true) {
-		printf("%s(x) 다항식을 입력하세요.(계수 지수) : ", name_result);
+		printf("%s(x) 다항식을 입력하세요.(계수 지수) : ", name);
 		scanf_s("%lf %d", &coef, &expon);
 
 		if (expon < 0)
@@ -203,4 +205,5 @@ polyNode* create_polynomial(const char* name) {
 		attach_pos = &((*attach_pos)->next); // 이와 같은 코드 : attach_pos = &(newNode->next)
 	}
 
+	return newPoly;
 }
