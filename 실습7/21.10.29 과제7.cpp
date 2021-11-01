@@ -283,3 +283,24 @@ polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 
 	return c;
 }
+
+polyNode* cpmul(polyNode* a, polyNode* b) {
+
+	polyNode* c, * cRear;
+	c = get_node();
+	c->next = c;
+	c->expon = -1;
+	cRear = c;
+
+	polyNode* mul_poly, *add_poly;
+	polyNode* current_a = a->next;
+	while (current_a != a) {
+		mul_poly = single_mul(current_a,b);
+		add_poly = cpadd(c, mul_poly);
+		cerase(&mul_poly);
+		cerase(&c);
+		c = add_poly;
+	}
+
+	return c;
+}
