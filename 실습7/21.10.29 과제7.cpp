@@ -54,6 +54,15 @@ void cerase(polyNode** list);
 // ● 3. 다항식의 생성
 
 /**
+* 리스트의 특정 위치에 새 항을 생성하여 붙여줍니다.
+* 
+* @param position 생성된 항을 이어붙일 노드포인터 변수의 주소값
+* @param coefficient 생성할 항의 계수
+* @param expon 생성할 항의 지수
+*/
+void pAttach(polyNode** position, double coefficient, int expon);
+
+/**
 * 사용자 입력을 받아 다항식을 생성하여 반환합니다.
 * 사용자 입력 실수에 관한 오류는 처리하지 않습니다.
 * 
@@ -164,6 +173,18 @@ void cerase(polyNode** list) {
 
 		*list = NULL;
 	}
+}
+
+void pAttach(polyNode** position, double coefficient, int expon) {
+
+	polyNode* newNode;
+
+	newNode = get_node();
+	newNode->expon = expon;
+	newNode->coef = coefficient;
+
+	list_attach(position, newNode);
+
 }
 
 polyNode* create_polynomial(const char* name_input) {
