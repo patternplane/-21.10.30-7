@@ -82,12 +82,13 @@ polyNode* create_polynomial(const char* name);
 polyNode* cpadd(polyNode* a, polyNode* b);
 
 /**
-* 다항식의 각 항에 주어진 항을 곱합니다.
+* 다항식과 단일항을 곱합니다.
 * 
 * @param poly 다항식을 가리키는 노드 포인터
 * @param singlePoly 곱할 단일항을 가리키는 노드 변수
+* @return 생성된 결과 다항식을 가리키는 노드포인터 반환
 */
-void single_mul(polyNode* poly, polyNode* singlePoly);
+polyNode* single_mul(polyNode* poly, polyNode* singlePoly);
 
 /**
 * 두 다항식의 곱
