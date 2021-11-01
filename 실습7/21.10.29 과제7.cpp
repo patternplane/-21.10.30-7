@@ -28,7 +28,7 @@ void list_attach(polyNode** nodePtr, polyNode* node);
 
 // ● 2. 가용연결리스트 저장소와 그 연산
 
-polyNode* avail = nullptr;
+polyNode* avail = NULL;
 
 /**
 * 새로운 노드를 생성하여 반환합니다.
@@ -114,7 +114,7 @@ void main() {
 void list_attach(polyNode** list, polyNode* node) {
 
 
-	if (*list == nullptr) {
+	if (*list == NULL) {
 		node->next = node;
 		*list = node;
 	}
@@ -130,10 +130,10 @@ polyNode* get_node() {
 
 	polyNode* tmp;
 
-	if (avail == nullptr) {
+	if (avail == NULL) {
 
 		tmp = (polyNode*)malloc(sizeof(polyNode));
-		if (tmp == nullptr) {
+		if (tmp == NULL) {
 			fprintf(stderr,"메모리공간을 확보할 수 없었습니다.\n");
 			exit(1);
 		}
@@ -157,12 +157,13 @@ void ret_node(polyNode* node) {
 }
 
 void cerase(polyNode** list) {
+	if (*list != NULL) {
+		polyNode* tmp = (*list)->next;
+		(*list)->next = avail;
+		avail = tmp;
 
-	polyNode* tmp = (*list)->next;
-	(*list)->next = avail;
-	avail = tmp;
-
-	*list = nullptr;
+		*list = NULL;
+	}
 }
 
 polyNode* create_polynomial(const char* name_input) {
@@ -180,7 +181,7 @@ polyNode* create_polynomial(const char* name_input) {
 	polyNode* newNode;
 
 	polyNode* newPoly = (polyNode*)malloc(sizeof(polyNode));
-	if (newPoly == nullptr) {
+	if (newPoly == NULL) {
 		fprintf(stderr, "메모리공간을 확보할 수 없었습니다.\n");
 		exit(1);
 	}
