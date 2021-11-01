@@ -234,7 +234,6 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 
 	polyNode* startA = a;
 	polyNode* c, * cRear;
-	polyNode* tmp;
 
 	c = get_node();
 	c->next = c;
@@ -246,31 +245,20 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 	double sumOfCoef;
 	while (a->expon != b->expon || a != startA) {
 		if (a->expon > b->expon) {
-			tmp = get_node();
-			tmp->expon = a->expon;
-			tmp->coef = a->coef;
-
-			list_attach(&cRear, tmp);
+			pAttach(&cRear, a->coef, a->expon);
 			a = a->next;
 		}
 		else if (a->expon == b->expon) {
 			sumOfCoef = a->coef + b->coef;
-			if (sumOfCoef < 0.0001) {
-				tmp = get_node();
-				tmp->expon = a->expon;
-				tmp->coef = sumOfCoef;
 
-				list_attach(&cRear, tmp);
+			if (sumOfCoef < 0.0001) { // coef의 합성이 0인가? - 정확도 : 0.0001 이하일때 0으로 판별
+				pAttach(&cRear, sumOfCoef, a->expon);
 				a = a->next;
 				b = b->next;
 			}
 		}
 		else { // a->expon < b->expon
-			tmp = get_node();
-			tmp->expon = b->expon;
-			tmp->coef = b->coef;
-
-			list_attach(&cRear, tmp);
+			pAttach(&cRear, b->coef, b->expon);
 			b = b->next;
 		}
 	}
