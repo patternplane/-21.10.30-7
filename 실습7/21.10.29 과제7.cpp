@@ -208,3 +208,51 @@ polyNode* create_polynomial(const char* name_input) {
 
 	return newPoly;
 }
+
+polyNode* cpadd(polyNode* a, polyNode* b) {
+
+	polyNode* startA = a;
+	polyNode* c, * cRear;
+	polyNode* tmp;
+
+	c = get_node();
+	c->next = c;
+	c->expon = -1;
+	cRear = c;
+
+	a = a->next;
+	b = b->next;
+	double sumOfCoef;
+	while (a->expon != b->expon || a != startA) {
+		if (a->expon > b->expon) {
+			tmp = get_node();
+			tmp->expon = a->expon;
+			tmp->coef = a->coef;
+
+			list_attach(&cRear, tmp);
+			a = a->next;
+		}
+		else if (a->expon == b->expon) {
+			sumOfCoef = a->coef + b->coef;
+			if (sumOfCoef < 0.0001) {
+				tmp = get_node();
+				tmp->expon = a->expon;
+				tmp->coef = sumOfCoef;
+
+				list_attach(&cRear, tmp);
+				a = a->next;
+				b = b->next;
+			}
+		}
+		else { // a->expon < b->expon
+			tmp = get_node();
+			tmp->expon = b->expon;
+			tmp->coef = b->coef;
+
+			list_attach(&cRear, tmp);
+			b = b->next;
+		}
+	}
+
+	return c;
+}
