@@ -29,11 +29,10 @@ void list_attach(polyNode** nodePtr, polyNode* node);
 /**
 * 원형연결리스트를 처음 생성합니다.
 * 
-* @param listPtr 리스트를 가리킬 노드포인터 변수의 주소값
 * @param coef 생성할 노드의 계수값
 * @param expon 생성할 노드의 지수값
 */
-void makeC(polyNode** listPtr, double coef, int expon);
+polyNode* makeC(double coef, int expon);
 
 // ● 2. 가용연결리스트 저장소와 그 연산
 
@@ -134,10 +133,12 @@ void main() {
 	print_polynomial(A);
 	printf("다항식 B의 생성 결과 : \n");
 	print_polynomial(B);
+	printf("\n");
 
 	C = cpadd(A, B);
 	printf("다항식의 합 결과 : \n");
 	print_polynomial(C);
+	printf("\n");
 
 	D = cpmul(A, B);
 	printf("다항식의 곱 결과 : \n");
@@ -158,7 +159,7 @@ void list_attach(polyNode** nodePtr, polyNode* node) {
 	*nodePtr = node;
 }
 
-void makeC(polyNode** listPtr, double coef, int expon) {
+polyNode* makeC( double coef, int expon) {
 	
 	polyNode* newNode;
 	newNode = get_node();
@@ -167,7 +168,7 @@ void makeC(polyNode** listPtr, double coef, int expon) {
 	newNode->expon = expon;
 	newNode->next = newNode;
 
-	*listPtr = newNode;
+	return newNode;
 	
 }
 
@@ -272,7 +273,7 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 	polyNode* startA = a;
 	polyNode* c, * cRear;
 
-	makeC(&c, -1, -1);
+	c = makeC( -1, -1);
 	cRear = c;
 
 	a = a->next;
@@ -303,7 +304,7 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 	
 	polyNode* c, * cRear;
-	makeC(&c, -1, -1);
+	c = makeC( -1, -1);
 	cRear = c;
 
 	polyNode* current_poly = poly->next;
@@ -318,7 +319,7 @@ polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 polyNode* cpmul(polyNode* a, polyNode* b) {
 
 	polyNode* c, * cRear;
-	makeC(&c, -1, -1);
+	c = makeC( -1, -1);
 	cRear = c;
 
 	polyNode* mul_poly, *add_poly;
