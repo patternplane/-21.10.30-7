@@ -326,6 +326,12 @@ polyNode* cpmul(polyNode* a, polyNode* b) {
 	polyNode* current_a = a->next;
 	while (current_a != a) {
 		mul_poly = single_mul(current_a,b);
+
+		// 중간과정을 출력합니다.
+		printf("■ 중간과정 Single-Mul : \n");
+		print_polynomial(mul_poly);
+		printf("\n");
+
 		add_poly = cpadd(c, mul_poly);
 		cerase(&mul_poly);
 		cerase(&c);
