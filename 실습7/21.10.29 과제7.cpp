@@ -26,6 +26,15 @@ typedef struct polyNode {
 */
 void list_attach(polyNode** nodePtr, polyNode* node);
 
+/**
+* 원형연결리스트를 처음 생성합니다.
+* 
+* @param listPtr 리스트를 가리키는 노드포인터 변수의 주소값
+* @param coef 생성할 노드의 계수값
+* @param expon 생성할 노드의 지수값
+*/
+void makeC(polyNode** listPtr, double coef, int expon);
+
 // ● 2. 가용연결리스트 저장소와 그 연산
 
 polyNode* avail = NULL;
@@ -134,6 +143,21 @@ void list_attach(polyNode** list, polyNode* node) {
 		*list = node;
 	}
 
+}
+
+void makeC(polyNode** listPtr, double coef, int expon) {
+	if (*listPtr != NULL) 
+		return;
+	
+	polyNode* newNode;
+	newNode = get_node();
+
+	newNode->coef = coef;
+	newNode->expon = expon;
+	newNode->next = newNode;
+
+	*listPtr = newNode;
+	
 }
 
 polyNode* get_node() {
