@@ -29,7 +29,7 @@ void list_attach(polyNode** nodePtr, polyNode* node);
 /**
 * 원형연결리스트를 처음 생성합니다.
 * 
-* @param listPtr 리스트를 가리키는 노드포인터 변수의 주소값
+* @param listPtr 리스트를 가리킬 노드포인터 변수의 주소값
 * @param coef 생성할 노드의 계수값
 * @param expon 생성할 노드의 지수값
 */
@@ -260,9 +260,7 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 	polyNode* startA = a;
 	polyNode* c, * cRear;
 
-	c = get_node();
-	c->next = c;
-	c->expon = -1;
+	makeC(&c, -1, -1);
 	cRear = c;
 
 	a = a->next;
@@ -294,9 +292,7 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 	
 	polyNode* c, * cRear;
-	c = get_node();
-	c->next = c;
-	c->expon = -1;
+	makeC(&c, -1, -1);
 	cRear = c;
 
 	polyNode* current_poly = poly->next;
@@ -311,9 +307,7 @@ polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 polyNode* cpmul(polyNode* a, polyNode* b) {
 
 	polyNode* c, * cRear;
-	c = get_node();
-	c->next = c;
-	c->expon = -1;
+	makeC(&c, -1, -1);
 	cRear = c;
 
 	polyNode* mul_poly, *add_poly;
