@@ -20,9 +20,9 @@ typedef struct polyNode {
 
 /**
 * 특정 노드를 특정 노드포인터 변수에 붙여줍니다.
-* 
+*
 * @param nodePtr 노드를 이어붙일 노드 포인터 변수의 포인터
-* @param node 리스트에 이어붙일 노드를 가리키는 포인터
+* @param node 이어붙일 노드를 가리키는 포인터
 */
 void list_attach(polyNode** nodePtr, polyNode* node);
 
@@ -130,19 +130,14 @@ void main() {
 
 // ■ 구현부
 
-void list_attach(polyNode** list, polyNode* node) {
+void list_attach(polyNode** nodePtr, polyNode* node) {
 
-
-	if (*list == NULL) {
+	if (*nodePtr == NULL) 
 		node->next = node;
-		*list = node;
-	}
-	else {
-		node->next = (*list)->next;
-		(*list)->next = node;
-		*list = node;
-	}
+	else 
+		node->next = *nodePtr;
 
+	*nodePtr = node;
 }
 
 void makeC(polyNode** listPtr, double coef, int expon) {
