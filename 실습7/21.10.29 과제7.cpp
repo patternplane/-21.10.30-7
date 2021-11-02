@@ -65,7 +65,8 @@ void cerase(polyNode** list);
 /**
 * 리스트의 특정 위치에 새 항을 생성하여 붙여줍니다.
 * 
-* @param position 생성된 항을 이어붙일 노드포인터 변수의 주소값
+* @param position 생성된 항을 이어붙일 노드를 가리키는 노드포인터 변수의 주소값
+* position은 다시 새로 생성된 노드를 가리키도록 변경됩니다.
 * @param coefficient 생성할 항의 계수
 * @param expon 생성할 항의 지수
 */
@@ -122,8 +123,25 @@ void print_polynomial(polyNode* list);
 
 void main() {
 
+	polyNode* A, * B, * C, * D;
 
+	A = create_polynomial("A");
+	printf("\n");
+	B = create_polynomial("B");
+	printf("\n");
 
+	printf("다항식 A의 생성 결과 : \n");
+	print_polynomial(A);
+	printf("다항식 B의 생성 결과 : \n");
+	print_polynomial(B);
+
+	C = cpadd(A, B);
+	printf("다항식의 합 결과 : \n");
+	print_polynomial(C);
+
+	D = cpmul(A, B);
+	printf("다항식의 곱 결과 : \n");
+	print_polynomial(D);
 }
 
 
@@ -141,8 +159,6 @@ void list_attach(polyNode** nodePtr, polyNode* node) {
 }
 
 void makeC(polyNode** listPtr, double coef, int expon) {
-	if (*listPtr != NULL) 
-		return;
 	
 	polyNode* newNode;
 	newNode = get_node();
@@ -203,8 +219,9 @@ void pAttach(polyNode** position, double coefficient, int expon) {
 	newNode->expon = expon;
 	newNode->coef = coefficient;
 
-	list_attach(position, newNode);
+	list_attach(&((*position)->next), newNode);
 
+	*position = newNode;
 }
 
 polyNode* create_polynomial(const char* name_input) {
@@ -269,11 +286,10 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 		else if (a->expon == b->expon) {
 			sumOfCoef = a->coef + b->coef;
 
-			if (sumOfCoef < 0.0001) { // coef의 합성이 0인가? - 정확도 : 0.0001 이하일때 0으로 판별
+			if (sumOfCoef < -0.0001 || sumOfCoef > 0.0001) // coef의 합성이 0인가? - 정확도 : 0.0001 이하일때 0으로 판별
 				pAttach(&cRear, sumOfCoef, a->expon);
-				a = a->next;
-				b = b->next;
-			}
+			a = a->next;
+			b = b->next;
 		}
 		else { // a->expon < b->expon
 			pAttach(&cRear, b->coef, b->expon);
@@ -293,7 +309,7 @@ polyNode* single_mul(polyNode* singlePoly, polyNode* poly) {
 	polyNode* current_poly = poly->next;
 	while (current_poly != poly) {
 		pAttach(&cRear,current_poly->coef * singlePoly->coef,current_poly->expon + singlePoly->expon);
-		current_poly = poly->next;
+		current_poly = current_poly->next;
 	}
 
 	return c;
@@ -313,6 +329,8 @@ polyNode* cpmul(polyNode* a, polyNode* b) {
 		cerase(&mul_poly);
 		cerase(&c);
 		c = add_poly;
+
+		current_a = current_a->next;
 	}
 
 	return c;
@@ -324,9 +342,9 @@ void print_polynomial(polyNode* list) {
 	polyNode* startNode = list;
 
 	printf("■ 다항식을 출력합니다 : \n");
-	printf("계수 | 지수\n");
+	printf("   계수    |    지수    \n");
 	while (current_poly != startNode) {
-		printf("%4.3f | %4d\n", current_poly->coef, current_poly->expon);
+		printf("%10.3f | %5d\n", current_poly->coef, current_poly->expon);
 		current_poly = current_poly->next;
 	}
 }
