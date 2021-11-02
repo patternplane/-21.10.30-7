@@ -330,7 +330,8 @@ void print_polynomial(polyNode* list) {
 
 	printf("■ 다항식을 출력합니다 : \n");
 	printf("계수 | 지수\n");
-	while (current_poly != startNode)
-		printf("%4.3f | %4d\n",current_poly->coef, current_poly->expon);
-
+	while (current_poly != startNode) {
+		printf("%4.3f | %4d\n", current_poly->coef, current_poly->expon);
+		current_poly = current_poly->next;
+	}
 }
