@@ -127,6 +127,15 @@ int main() {
 	printf("후위 순회 : ");
 	postorder(testNode2);
 	printf("\n");
+	printf("\n\n");
+
+	printf("3. 동일성 검사 알고리즘 테스트를 합니다.\n");
+	printf("복사된 트리와 원본 트리는 같은가 : %s\n",(equal(testNode1,testNode2))?("true") : ("false"));
+	testNode2->data = 2;
+	printf("루트노드값을 2로 바꾸었을때 결과 : %s\n", (equal(testNode1, testNode2)) ? ("true") : ("false"));
+	testNode2->data = testNode1->data;
+	testNode2->lchild->data = 9;
+	printf("루트의 왼쪽 자식노드값을 9로 바꾸었을때 결과 : %s\n", (equal(testNode1, testNode2)) ? ("true") : ("false"));
 
 	return 0;
 }
@@ -221,4 +230,10 @@ node* copy(node* root) {
 	}
 
 	return newNode;
+}
+
+int equal(node* A, node* B) {
+
+	return ((!A && !B) || (A && B && (A->data == B->data) && equal(A->lchild, B->lchild) && equal(A->rchild, B->rchild)));
+
 }
