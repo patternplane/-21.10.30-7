@@ -1,16 +1,16 @@
-// °úÁ¦ 7ºÎÅÍ´Â github·Î ¿Å±é´Ï´Ù.
+// ê³¼ì œ 7ë¶€í„°ëŠ” githubë¡œ ì˜®ê¹ë‹ˆë‹¤.
 
 /**
-* @author ¹é¼º¼ö
-* @studentId 22012070
+* @author ë°±ì„±ìˆ˜
+* @studentId
 */
 
 #include <stdlib.h>
 #include <stdio.h>
 
-// ¡á Çì´õ
+// â–  í—¤ë”
 
-// ¡Ü 1. ¿øÇü ¿¬°á¸®½ºÆ®¿Í ±× ¿¬»ê
+// â— 1. ì›í˜• ì—°ê²°ë¦¬ìŠ¤íŠ¸ì™€ ê·¸ ì—°ì‚°
 
 typedef struct polyNode {
 	int expon;
@@ -19,106 +19,106 @@ typedef struct polyNode {
 }polyNode;
 
 /**
-* Æ¯Á¤ ³ëµå¸¦ Æ¯Á¤ ³ëµåÆ÷ÀÎÅÍ º¯¼ö¿¡ ºÙ¿©Áİ´Ï´Ù.
+* íŠ¹ì • ë…¸ë“œë¥¼ íŠ¹ì • ë…¸ë“œí¬ì¸í„° ë³€ìˆ˜ì— ë¶™ì—¬ì¤ë‹ˆë‹¤.
 *
-* @param nodePtr ³ëµå¸¦ ÀÌ¾îºÙÀÏ ³ëµå Æ÷ÀÎÅÍ º¯¼öÀÇ Æ÷ÀÎÅÍ
-* @param node ÀÌ¾îºÙÀÏ ³ëµå¸¦ °¡¸®Å°´Â Æ÷ÀÎÅÍ
+* @param nodePtr ë…¸ë“œë¥¼ ì´ì–´ë¶™ì¼ ë…¸ë“œ í¬ì¸í„° ë³€ìˆ˜ì˜ í¬ì¸í„°
+* @param node ì´ì–´ë¶™ì¼ ë…¸ë“œë¥¼ ê°€ë¦¬í‚¤ëŠ” í¬ì¸í„°
 */
 void list_attach(polyNode** nodePtr, polyNode* node);
 
 /**
-* ¿øÇü¿¬°á¸®½ºÆ®¸¦ Ã³À½ »ı¼ºÇÕ´Ï´Ù.
+* ì›í˜•ì—°ê²°ë¦¬ìŠ¤íŠ¸ë¥¼ ì²˜ìŒ ìƒì„±í•©ë‹ˆë‹¤.
 * 
-* @param coef »ı¼ºÇÒ ³ëµåÀÇ °è¼ö°ª
-* @param expon »ı¼ºÇÒ ³ëµåÀÇ Áö¼ö°ª
+* @param coef ìƒì„±í•  ë…¸ë“œì˜ ê³„ìˆ˜ê°’
+* @param expon ìƒì„±í•  ë…¸ë“œì˜ ì§€ìˆ˜ê°’
 */
 polyNode* makeC(double coef, int expon);
 
-// ¡Ü 2. °¡¿ë¿¬°á¸®½ºÆ® ÀúÀå¼Ò¿Í ±× ¿¬»ê
+// â— 2. ê°€ìš©ì—°ê²°ë¦¬ìŠ¤íŠ¸ ì €ì¥ì†Œì™€ ê·¸ ì—°ì‚°
 
 polyNode* avail = NULL;
 
 /**
-* »õ·Î¿î ³ëµå¸¦ »ı¼ºÇÏ¿© ¹İÈ¯ÇÕ´Ï´Ù.
+* ìƒˆë¡œìš´ ë…¸ë“œë¥¼ ìƒì„±í•˜ì—¬ ë°˜í™˜í•©ë‹ˆë‹¤.
 * 
-* @return »ı¼ºµÈ ³ëµåÀÇ Æ÷ÀÎÅÍ
+* @return ìƒì„±ëœ ë…¸ë“œì˜ í¬ì¸í„°
 */
 polyNode* get_node();
 
 /**
-* Æ¯Á¤ ³ëµå¸¦ °¡¿ë¿¬°á¸®½ºÆ®¿¡ ºÙÀÔ´Ï´Ù.
+* íŠ¹ì • ë…¸ë“œë¥¼ ê°€ìš©ì—°ê²°ë¦¬ìŠ¤íŠ¸ì— ë¶™ì…ë‹ˆë‹¤.
 * 
-* @param node °¡¿ë¿¬°á¸®½ºÆ®¿¡ ºÙÀÏ ³ëµå¸¦ °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
+* @param node ê°€ìš©ì—°ê²°ë¦¬ìŠ¤íŠ¸ì— ë¶™ì¼ ë…¸ë“œë¥¼ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
 */
 void ret_node(polyNode* node);
 
 /**
-* ¿øÇü ¿¬°á¸®½ºÆ® ÀüÃ¼¸¦ °¡¿ë¿¬°á¸®½ºÆ®¿¡ ºÙÀÔ´Ï´Ù.
+* ì›í˜• ì—°ê²°ë¦¬ìŠ¤íŠ¸ ì „ì²´ë¥¼ ê°€ìš©ì—°ê²°ë¦¬ìŠ¤íŠ¸ì— ë¶™ì…ë‹ˆë‹¤.
 * 
-* @param list °¡¿ë¿¬°á¸®½ºÆ®¿¡ ºÙÀÏ ¸®½ºÆ®¸¦ °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ º¯¼öÀÇ Æ÷ÀÎÅÍ
+* @param list ê°€ìš©ì—°ê²°ë¦¬ìŠ¤íŠ¸ì— ë¶™ì¼ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„° ë³€ìˆ˜ì˜ í¬ì¸í„°
 */
 void cerase(polyNode** list);
 
-// ¡Ü 3. ´ÙÇ×½ÄÀÇ »ı¼º
+// â— 3. ë‹¤í•­ì‹ì˜ ìƒì„±
 
 /**
-* ¸®½ºÆ®ÀÇ Æ¯Á¤ À§Ä¡¿¡ »õ Ç×À» »ı¼ºÇÏ¿© ºÙ¿©Áİ´Ï´Ù.
+* ë¦¬ìŠ¤íŠ¸ì˜ íŠ¹ì • ìœ„ì¹˜ì— ìƒˆ í•­ì„ ìƒì„±í•˜ì—¬ ë¶™ì—¬ì¤ë‹ˆë‹¤.
 * 
-* @param position »ı¼ºµÈ Ç×À» ÀÌ¾îºÙÀÏ ³ëµå¸¦ °¡¸®Å°´Â ³ëµåÆ÷ÀÎÅÍ º¯¼öÀÇ ÁÖ¼Ò°ª
-* positionÀº ´Ù½Ã »õ·Î »ı¼ºµÈ ³ëµå¸¦ °¡¸®Å°µµ·Ï º¯°æµË´Ï´Ù.
-* @param coefficient »ı¼ºÇÒ Ç×ÀÇ °è¼ö
-* @param expon »ı¼ºÇÒ Ç×ÀÇ Áö¼ö
+* @param position ìƒì„±ëœ í•­ì„ ì´ì–´ë¶™ì¼ ë…¸ë“œë¥¼ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œí¬ì¸í„° ë³€ìˆ˜ì˜ ì£¼ì†Œê°’
+* positionì€ ë‹¤ì‹œ ìƒˆë¡œ ìƒì„±ëœ ë…¸ë“œë¥¼ ê°€ë¦¬í‚¤ë„ë¡ ë³€ê²½ë©ë‹ˆë‹¤.
+* @param coefficient ìƒì„±í•  í•­ì˜ ê³„ìˆ˜
+* @param expon ìƒì„±í•  í•­ì˜ ì§€ìˆ˜
 */
 void pAttach(polyNode** position, double coefficient, int expon);
 
 /**
-* »ç¿ëÀÚ ÀÔ·ÂÀ» ¹Ş¾Æ ´ÙÇ×½ÄÀ» »ı¼ºÇÏ¿© ¹İÈ¯ÇÕ´Ï´Ù.
-* »ç¿ëÀÚ ÀÔ·Â ½Ç¼ö¿¡ °üÇÑ ¿À·ù´Â Ã³¸®ÇÏÁö ¾Ê½À´Ï´Ù.
+* ì‚¬ìš©ì ì…ë ¥ì„ ë°›ì•„ ë‹¤í•­ì‹ì„ ìƒì„±í•˜ì—¬ ë°˜í™˜í•©ë‹ˆë‹¤.
+* ì‚¬ìš©ì ì…ë ¥ ì‹¤ìˆ˜ì— ê´€í•œ ì˜¤ë¥˜ëŠ” ì²˜ë¦¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
 * 
-* @param name ´ÙÇ×½ÄÀÇ ÀÌ¸§À» ÀÔ·Â¹Ş½À´Ï´Ù. (ºñ¿ì·Á¸é null ±âÀÔ)
-* @return »ı¼ºµÈ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
+* @param name ë‹¤í•­ì‹ì˜ ì´ë¦„ì„ ì…ë ¥ë°›ìŠµë‹ˆë‹¤. (ë¹„ìš°ë ¤ë©´ null ê¸°ì…)
+* @return ìƒì„±ëœ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
 */
 polyNode* create_polynomial(const char* name);
 
-// ¡Ü 4. ´ÙÇ×½ÄÀÇ ¿¬»ê
+// â— 4. ë‹¤í•­ì‹ì˜ ì—°ì‚°
 
 /**
-* µÎ ´ÙÇ×½ÄÀÇ ÇÕÀ» ±¸ÇÏ¿© ¹İÈ¯ÇÕ´Ï´Ù.
+* ë‘ ë‹¤í•­ì‹ì˜ í•©ì„ êµ¬í•˜ì—¬ ë°˜í™˜í•©ë‹ˆë‹¤.
 * 
-* @param a, b ´õÇÒ µÎ°³ÀÇ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
-* @return ´ÙÇ×½ÄÀÇ ÇÕÀÇ °á°ú·Î »ı¼ºµÈ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
+* @param a, b ë”í•  ë‘ê°œì˜ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
+* @return ë‹¤í•­ì‹ì˜ í•©ì˜ ê²°ê³¼ë¡œ ìƒì„±ëœ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
 */
 polyNode* cpadd(polyNode* a, polyNode* b);
 
 /**
-* ´ÙÇ×½Ä°ú ´ÜÀÏÇ×À» °öÇÕ´Ï´Ù.
+* ë‹¤í•­ì‹ê³¼ ë‹¨ì¼í•­ì„ ê³±í•©ë‹ˆë‹¤.
 * 
-* @param poly ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
-* @param singlePoly °öÇÒ ´ÜÀÏÇ×À» °¡¸®Å°´Â ³ëµå º¯¼ö
-* @return »ı¼ºµÈ °á°ú ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµåÆ÷ÀÎÅÍ ¹İÈ¯
+* @param poly ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
+* @param singlePoly ê³±í•  ë‹¨ì¼í•­ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ ë³€ìˆ˜
+* @return ìƒì„±ëœ ê²°ê³¼ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œí¬ì¸í„° ë°˜í™˜
 */
 polyNode* single_mul(polyNode* singlePoly, polyNode* poly);
 
 /**
-* µÎ ´ÙÇ×½ÄÀÇ °ö
+* ë‘ ë‹¤í•­ì‹ì˜ ê³±
 * 
-* @param a, b °öÇØÁú µÎ°³ÀÇ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
-* @return ´ÙÇ×½ÄÀÇ °öÀÇ °á°ú·Î »ı¼ºµÈ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëµå Æ÷ÀÎÅÍ
+* @param a, b ê³±í•´ì§ˆ ë‘ê°œì˜ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
+* @return ë‹¤í•­ì‹ì˜ ê³±ì˜ ê²°ê³¼ë¡œ ìƒì„±ëœ ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸ë“œ í¬ì¸í„°
 */
 polyNode* cpmul(polyNode* a, polyNode* b);
 
-// ¡Ü 5. ´ÙÇ×½ÄÀÇ Ãâ·Â
+// â— 5. ë‹¤í•­ì‹ì˜ ì¶œë ¥
 
 /**
-* ´ÙÇ×½ÄÀ» Ãâ·ÂÇÕ´Ï´Ù.
+* ë‹¤í•­ì‹ì„ ì¶œë ¥í•©ë‹ˆë‹¤.
 * 
-* @param list Ãâ·ÂÇÒ ´ÙÇ×½ÄÀ» °¡¸®Å°´Â ³ëÆ® Æ÷ÀÎÅÍ
+* @param list ì¶œë ¥í•  ë‹¤í•­ì‹ì„ ê°€ë¦¬í‚¤ëŠ” ë…¸íŠ¸ í¬ì¸í„°
 */
 void print_polynomial(polyNode* list);
 
 
 
-// ¡á ¸ŞÀÎÇÔ¼ö
+// â–  ë©”ì¸í•¨ìˆ˜
 
 void main() {
 
@@ -129,29 +129,29 @@ void main() {
 	B = create_polynomial("B");
 	printf("\n");
 
-	printf("´ÙÇ×½Ä AÀÇ »ı¼º °á°ú : \n");
+	printf("ë‹¤í•­ì‹ Aì˜ ìƒì„± ê²°ê³¼ : \n");
 	print_polynomial(A);
-	printf("´ÙÇ×½Ä BÀÇ »ı¼º °á°ú : \n");
+	printf("ë‹¤í•­ì‹ Bì˜ ìƒì„± ê²°ê³¼ : \n");
 	print_polynomial(B);
 	printf("\n");
 
 	C = cpadd(A, B);
-	printf("´ÙÇ×½ÄÀÇ ÇÕ °á°ú : \n");
+	printf("ë‹¤í•­ì‹ì˜ í•© ê²°ê³¼ : \n");
 	print_polynomial(C);
 	printf("\n");
 
 	D = cpmul(A, B);
-	printf("´ÙÇ×½ÄÀÇ °ö °á°ú : \n");
+	printf("ë‹¤í•­ì‹ì˜ ê³± ê²°ê³¼ : \n");
 	print_polynomial(D);
 
-	printf("ÀÌ»ó ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù.\nÁøÇàÇÏ·Á¸é ¾Æ¹« ¼ıÀÚ³ª ÀÔ·Â : ");
+	printf("ì´ìƒ í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.\nì§„í–‰í•˜ë ¤ë©´ ì•„ë¬´ ìˆ«ìë‚˜ ì…ë ¥ : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
 }
 
 
 
-// ¡á ±¸ÇöºÎ
+// â–  êµ¬í˜„ë¶€
 
 void list_attach(polyNode** nodePtr, polyNode* node) {
 
@@ -184,7 +184,7 @@ polyNode* get_node() {
 
 		tmp = (polyNode*)malloc(sizeof(polyNode));
 		if (tmp == NULL) {
-			fprintf(stderr,"¸Ş¸ğ¸®°ø°£À» È®º¸ÇÒ ¼ö ¾ø¾ú½À´Ï´Ù.\n");
+			fprintf(stderr,"ë©”ëª¨ë¦¬ê³µê°„ì„ í™•ë³´í•  ìˆ˜ ì—†ì—ˆìŠµë‹ˆë‹¤.\n");
 			exit(1);
 		}
 
@@ -245,7 +245,7 @@ polyNode* create_polynomial(const char* name_input) {
 
 	polyNode* newPoly = (polyNode*)malloc(sizeof(polyNode));
 	if (newPoly == NULL) {
-		fprintf(stderr, "¸Ş¸ğ¸®°ø°£À» È®º¸ÇÒ ¼ö ¾ø¾ú½À´Ï´Ù.\n");
+		fprintf(stderr, "ë©”ëª¨ë¦¬ê³µê°„ì„ í™•ë³´í•  ìˆ˜ ì—†ì—ˆìŠµë‹ˆë‹¤.\n");
 		exit(1);
 	}
 
@@ -255,7 +255,7 @@ polyNode* create_polynomial(const char* name_input) {
 
 	attach_pos = &(newPoly->next);
 	while (true) {
-		printf("%s(x) ´ÙÇ×½ÄÀ» ÀÔ·ÂÇÏ¼¼¿ä.(°è¼ö Áö¼ö) : ", name);
+		printf("%s(x) ë‹¤í•­ì‹ì„ ì…ë ¥í•˜ì„¸ìš”.(ê³„ìˆ˜ ì§€ìˆ˜) : ", name);
 		scanf_s("%lf %d", &coef, &expon);
 
 		if (expon < 0)
@@ -266,7 +266,7 @@ polyNode* create_polynomial(const char* name_input) {
 		newNode->coef = coef;
 
 		list_attach(attach_pos, newNode);
-		attach_pos = &((*attach_pos)->next); // ÀÌ¿Í °°Àº ÄÚµå : attach_pos = &(newNode->next)
+		attach_pos = &((*attach_pos)->next); // ì´ì™€ ê°™ì€ ì½”ë“œ : attach_pos = &(newNode->next)
 	}
 
 	return newPoly;
@@ -291,7 +291,7 @@ polyNode* cpadd(polyNode* a, polyNode* b) {
 		else if (a->expon == b->expon) {
 			sumOfCoef = a->coef + b->coef;
 
-			if (sumOfCoef < -0.0001 || sumOfCoef > 0.0001) // coefÀÇ ÇÕ¼ºÀÌ 0ÀÎ°¡? - Á¤È®µµ : 0.0001 ÀÌÇÏÀÏ¶§ 0À¸·Î ÆÇº°
+			if (sumOfCoef < -0.0001 || sumOfCoef > 0.0001) // coefì˜ í•©ì„±ì´ 0ì¸ê°€? - ì •í™•ë„ : 0.0001 ì´í•˜ì¼ë•Œ 0ìœ¼ë¡œ íŒë³„
 				pAttach(&cRear, sumOfCoef, a->expon);
 			a = a->next;
 			b = b->next;
@@ -331,8 +331,8 @@ polyNode* cpmul(polyNode* a, polyNode* b) {
 	while (current_a != a) {
 		mul_poly = single_mul(current_a,b);
 
-		// Áß°£°úÁ¤À» Ãâ·ÂÇÕ´Ï´Ù.
-		printf("¡á Áß°£°úÁ¤ Single-Mul : \n");
+		// ì¤‘ê°„ê³¼ì •ì„ ì¶œë ¥í•©ë‹ˆë‹¤.
+		printf("â–  ì¤‘ê°„ê³¼ì • Single-Mul : \n");
 		print_polynomial(mul_poly);
 		printf("\n");
 
@@ -352,8 +352,8 @@ void print_polynomial(polyNode* list) {
 	polyNode* current_poly = list->next;
 	polyNode* startNode = list;
 
-	printf("¡á ´ÙÇ×½ÄÀ» Ãâ·ÂÇÕ´Ï´Ù : \n");
-	printf("   °è¼ö    |    Áö¼ö    \n");
+	printf("â–  ë‹¤í•­ì‹ì„ ì¶œë ¥í•©ë‹ˆë‹¤ : \n");
+	printf("   ê³„ìˆ˜    |    ì§€ìˆ˜    \n");
 	while (current_poly != startNode) {
 		printf("%10.3f | %5d\n", current_poly->coef, current_poly->expon);
 		current_poly = current_poly->next;
