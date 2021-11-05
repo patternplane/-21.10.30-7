@@ -166,7 +166,7 @@ int main() {
 	print_tree(testTree4);
 	printf("\n");
 
-	printf("위 트리의 시각화 : \n(특정 노드에서 왼쪽은 부모, 오른쪽은 오른쪽 자식, 아래는 왼쪽 자식)\n");
+	printf("위 트리의 시각화 : \n(특정 노드에서 오른쪽은 오른쪽 자식, 아래는 왼쪽 자식)\n");
 	show_tree(testTree4);
 	printf("\n\n");
 
