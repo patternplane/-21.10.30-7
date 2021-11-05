@@ -111,6 +111,14 @@ int equal(node* A, node* B);
 */
 node* swap(node* root);
 
+// ● 트리 출력 함수
+
+/**
+* 트리를 시각적으로 출력합니다.
+* 
+* @param tree : 출력할 트리의 루트노드 포인터
+*/
+void show_tree(node* tree);
 
 
 // ■ main
@@ -147,6 +155,10 @@ int main() {
 	printf("9개의 정수값을 저장하는 트리 생성됨 : \n");
 	node* testNode4 = make_auto_tree(9);
 	print_tree(testNode4);
+	printf("\n");
+
+	printf("위 트리의 시각화 : \n(특정 노드에서 왼쪽은 부모, 오른쪽은 오른쪽 자식, 아래는 왼쪽 자식)\n");
+	show_tree(testNode4);
 	printf("\n\n");
 
 	return 0;
@@ -308,4 +320,94 @@ node* swap(node* root) {
 	}
 
 	return newNode;
+}
+
+/**
+* ○ 보조함수 (show_tree)
+* show_tree를 구현할때 사용하는 공백과 세로줄 추가 문자
+*
+* @param pre_blank : 미리 앞에 띄워야 하는 공백 / 세로줄 총 갯수
+* @param blank_bitmap : 15개 칸 중 어떤 칸에 세로줄을 그어야 하는지 정보를 16비트 플래그로 담아둔 정수
+* @param 작은자리에서부터 15비트만을 사용한다.
+*/
+void print_tree_blank(int pre_blank, short blank_bitmap) {
+	printf(" ");
+
+	for (int i = 0; i < pre_blank; i++) {
+		if ((blank_bitmap >> i) %2)
+			printf("| ");
+		else
+			printf("  ");
+	}
+}
+
+/**
+* ○ 보조함수 (show_tree)
+* show_tree를 구현하기 위한 재귀적 함수
+* 
+* @param pre_blank : 미리 앞에 띄워둘 공백 + 세로줄 묶음 갯수
+* @param blank_bitmap : 15개 칸 중 어떤 칸에 세로줄을 그어야 하는지 정보를 16비트 플래그로 담아둔 정수
+* @param tree : 출력할 트리의 루트노드 포인터
+*/
+void show_tree_r(int pre_blank,short blank_bitmap, node* tree) {
+	
+	// 특정 노드의 오른쪽 자식은 오른쪽으로 출력하고,
+	// 왼쪽 자식은 아래로 출력한다.
+
+	node* stack[15];
+	int top = -1;
+
+	// 미리 앞에 띄워둘 공백과 세로줄들 출력
+	print_tree_blank(pre_blank, blank_bitmap);
+	
+	// 오른쪽 자식들 출력
+	// "항목-항목"의 출력 규격을 맞추기 위해 가장 첫 항목은 "-"문자를 빼고 출력
+	printf("%d", tree->data);
+	// push
+	stack[++top] = tree;
+	tree = tree->rchild;
+	// 나머지 항목은 "-항목" 형태로 출력
+	for (; tree != NULL; tree = tree->rchild) {
+		printf("-%d", tree->data);
+		
+		// push
+		if (top == 15) {
+			printf("show_tree : stack over\n");
+			exit(1);
+		}
+		stack[++top] = tree;
+	}
+	printf("\n");
+
+	// 오른쪽 자식들을 돌아보면서 추가로 체크해야 할 플래그들 기록하기
+	for (int i = 0; i <= top; i++) {
+		// 만약 왼쪽 자식을 가진 노드라면 플래그 세우고,
+		// 그렇지 않다면 플래그 내림
+		if (stack[i]->lchild != NULL)
+			blank_bitmap |= (1 << (i + pre_blank));
+		else
+			blank_bitmap ^= (blank_bitmap & (1 << (i + pre_blank)));
+	}
+
+	// 방금 오른쪽으로 돌아본 각 자식들마다 왼쪽 자식들 출력
+	while (top != -1) {
+		if (stack[top]->lchild != NULL) {
+			// 왼쪽 자식을 출력하기 전에 보기좋게 세로줄 출력해주기
+			print_tree_blank(pre_blank + top+1, blank_bitmap);
+			printf("\n");
+
+			show_tree_r(pre_blank + top, blank_bitmap, stack[top]->lchild);
+		}
+		
+		top--;
+	}
+}
+
+void show_tree(node* tree) {
+	
+	if (tree == NULL)
+		return;
+
+	show_tree_r(0,0,tree);
+
 }
