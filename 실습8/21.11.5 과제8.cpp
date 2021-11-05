@@ -95,6 +95,13 @@ node* copy(node* root);
 */
 int equal(node* A, node* B);
 
+/**
+* 입력된 트리를 복사 생성하되, 좌우 반전하여 반환합니다.
+*
+* @param root : 좌우 반전으로 복사할 원본 트리의 루트노드 포인터
+* @return 좌우 반전되어 복사된 트리의 루트노드 포인터
+*/
+node* swap(node* root);
 
 
 
@@ -136,6 +143,21 @@ int main() {
 	testNode2->data = testNode1->data;
 	testNode2->lchild->data = 9;
 	printf("루트의 왼쪽 자식노드값을 9로 바꾸었을때 결과 : %s\n", (equal(testNode1, testNode2)) ? ("true") : ("false"));
+	printf("\n\n");
+
+	printf("4. swap 알고리즘 테스트를 합니다.\n");
+	printf("swap된 트리의 순회 결과 : \n");
+	node* testNode3 = swap(testNode1);
+	printf("중위 순회 : ");
+	inorder(testNode3);
+	printf("\n");
+	printf("전위 순회 : ");
+	preorder(testNode3);
+	printf("\n");
+	printf("후위 순회 : ");
+	postorder(testNode3);
+	printf("\n");
+	printf("\n\n");
 
 	return 0;
 }
@@ -236,4 +258,20 @@ int equal(node* A, node* B) {
 
 	return ((!A && !B) || (A && B && (A->data == B->data) && equal(A->lchild, B->lchild) && equal(A->rchild, B->rchild)));
 
+}
+
+node* swap(node* root) {
+
+	node* newNode;
+
+	if (root != NULL) {
+		newNode = get_node(root->data);
+		newNode->lchild = swap(root->rchild);
+		newNode->rchild = swap(root->lchild);
+	}
+	else {
+		newNode = NULL;
+	}
+
+	return newNode;
 }
