@@ -143,7 +143,9 @@ int main() {
 	print_tree(testNode3);
 	printf("\n\n");
 
-	node* testNode4 = make_auto_tree(10);
+	printf("5. 트리 자동생성 알고리즘 테스트를 합니다.\n");
+	printf("9개의 정수값을 저장하는 트리 생성됨 : \n");
+	node* testNode4 = make_auto_tree(9);
 	print_tree(testNode4);
 	printf("\n\n");
 
