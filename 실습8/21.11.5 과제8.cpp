@@ -102,6 +102,18 @@ int equal(node* A, node* B);
 
 int main() {
 
+	node* testNode1 = make_tree_by_code();
+	printf("순회 알고리즘 테스트를 합니다.\n");
+	printf("중위 순회 : ");
+	inorder(testNode1);
+	printf("\n");
+	printf("전위 순회 : ");
+	preorder(testNode1);
+	printf("\n");
+	printf("후위 순회 : ");
+	postorder(testNode1);
+	printf("\n");
+
 	return 0;
 }
 
@@ -141,4 +153,42 @@ void ret_node(node* remove_node) {
 	remove_node->rchild = NULL;
 
 	avail = remove_node;
+}
+
+node* make_tree_by_code() {
+	// 생성할 트리는 이진트리.
+	// 깊이는 3, 총 노드 수는 5개.
+	// 루트노드가 2개의 자식을 가지며, 루트노드의 좌측 자식노드가 다시 2개의 자식을 가진다.
+	node* root = get_node(5);
+	root->lchild = get_node(3);
+	root->rchild = get_node(8);
+
+	root->lchild->lchild = get_node(1);
+	root->lchild->rchild = get_node(4);
+
+	return root;
+}
+
+void inorder(node* root) {
+	if (root != NULL) {
+		inorder(root->lchild);
+		printf("%d",root->data);
+		inorder(root->rchild);
+	}
+}
+
+void preorder(node* root) {
+	if (root != NULL) {
+		printf("%d", root->data);
+		preorder(root->lchild);
+		preorder(root->rchild);
+	}
+}
+
+void postorder(node* root) {
+	if (root != NULL) {
+		postorder(root->lchild);
+		postorder(root->rchild);
+		printf("%d", root->data);
+	}
 }
