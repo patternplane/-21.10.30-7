@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 // ■ 헤더
@@ -76,6 +77,13 @@ void preorder(node* root);
 */
 void postorder(node* root);
 
+/**
+* 주어진 트리를 중위, 전위, 후위 순회하여 출력합니다.
+* 
+* @param tree : 출력할 트리의 루트노드 포인터
+*/
+void print_tree(node* tree);
+
 // ● 트리 연산 함수
 
 /**
@@ -109,31 +117,15 @@ node* swap(node* root);
 
 int main() {
 
-	node* testNode1 = make_tree_by_code();
 	printf("1. 순회 알고리즘 테스트를 합니다.\n");
-	printf("중위 순회 : ");
-	inorder(testNode1);
-	printf("\n");
-	printf("전위 순회 : ");
-	preorder(testNode1);
-	printf("\n");
-	printf("후위 순회 : ");
-	postorder(testNode1);
-	printf("\n");
+	node* testNode1 = make_tree_by_code();
+	print_tree(testNode1);
 	printf("\n\n");
 
 	printf("2. 복사 알고리즘 테스트를 합니다.\n");
 	printf("복사된 트리의 순회 결과 : \n");
 	node* testNode2 = copy(testNode1);
-	printf("중위 순회 : ");
-	inorder(testNode2);
-	printf("\n");
-	printf("전위 순회 : ");
-	preorder(testNode2);
-	printf("\n");
-	printf("후위 순회 : ");
-	postorder(testNode2);
-	printf("\n");
+	print_tree(testNode2);
 	printf("\n\n");
 
 	printf("3. 동일성 검사 알고리즘 테스트를 합니다.\n");
@@ -148,15 +140,11 @@ int main() {
 	printf("4. swap 알고리즘 테스트를 합니다.\n");
 	printf("swap된 트리의 순회 결과 : \n");
 	node* testNode3 = swap(testNode1);
-	printf("중위 순회 : ");
-	inorder(testNode3);
-	printf("\n");
-	printf("전위 순회 : ");
-	preorder(testNode3);
-	printf("\n");
-	printf("후위 순회 : ");
-	postorder(testNode3);
-	printf("\n");
+	print_tree(testNode3);
+	printf("\n\n");
+
+	node* testNode4 = make_auto_tree(10);
+	print_tree(testNode4);
 	printf("\n\n");
 
 	return 0;
@@ -214,6 +202,38 @@ node* make_tree_by_code() {
 	return root;
 }
 
+node* make_auto_tree(int n) {
+
+	srand(time(NULL));
+
+	// 루트노드는 1을 가짐
+	node* newTree = get_node(1);
+
+	// nodePtr은 특정 노드를 가리키는 노드포인터 변수의 포인터이며,
+	// 이것은 곧 현재 노드의 부모노드의 lchild 변수 혹은 rchild 변수를 가리킴으로써 구현가능합니다.
+	node** nodePtr;
+
+	// 트리에 노드를 생성하여 나머지 숫자들(2~n) 기입
+	for (int i = 2; i <= n; i++) {
+		// 1. 루트노드로부터 노드가 안 붙은 위치까지 내려가기
+		nodePtr = &newTree;
+		do {
+			// 랜덤으로 값을 뽑아,
+			// 짝수이면 현재 노드의 오른쪽 자식방향에 집중을 맞추며,
+			// 홀수이면 현재 노드의 왼쪽 자식방향에 집중을 맞춘다.
+			if (rand()%2)
+				nodePtr = &((*nodePtr)->rchild);
+			else
+				nodePtr = &((*nodePtr)->lchild);
+		} while (*nodePtr != NULL);
+
+		// 2. 노드가 안 붙은 위치에 새 노드를 생성하고 데이터 기입
+		*nodePtr = get_node(i);
+	}
+
+	return newTree;
+}
+
 void inorder(node* root) {
 	if (root != NULL) {
 		inorder(root->lchild);
@@ -236,6 +256,18 @@ void postorder(node* root) {
 		postorder(root->rchild);
 		printf("%d", root->data);
 	}
+}
+
+void print_tree(node* tree) {
+	printf("중위 순회 : ");
+	inorder(tree);
+	printf("\n");
+	printf("전위 순회 : ");
+	preorder(tree);
+	printf("\n");
+	printf("후위 순회 : ");
+	postorder(tree);
+	printf("\n");
 }
 
 node* copy(node* root) {
