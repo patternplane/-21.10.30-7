@@ -161,6 +161,10 @@ int main() {
 	show_tree(testNode4);
 	printf("\n\n");
 
+	printf("이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
+	int final_exit_answer;
+	scanf_s("%d", &final_exit_answer);
+
 	return 0;
 }
 
