@@ -54,6 +54,15 @@ node* make_tree_by_code();
 */
 node* make_auto_tree(int n);
 
+// ● 트리 제거 함수
+
+/**
+* 주어진 트리를 반환합니다.
+* 
+* @param tree : 지울 트리의 루트노드를 가리키는 포인터 변수의 주소
+*/
+void delete_tree(node** tree);
+
 // ● 트리 순회 함수
 
 /**
@@ -250,6 +259,29 @@ node* make_auto_tree(int n) {
 	}
 
 	return newTree;
+}
+
+/**
+* ○ 보조함수 (delete_tree)
+* delete_tree를 재귀적으로 수행하기 위한 재귀함수입니다.
+* 
+* @param tree : 지울 트리의 루트노드 포인터
+*/
+void delete_tree_r(node* tree) {
+	if (tree != NULL) {
+		delete_tree_r(tree->lchild);
+		delete_tree_r(tree->rchild);
+		ret_node(tree);
+	}
+}
+
+void delete_tree(node** tree) {
+
+	if (tree != NULL) {
+		delete_tree_r(*tree);
+		*tree = NULL;
+	}
+
 }
 
 void inorder(node* root) {
