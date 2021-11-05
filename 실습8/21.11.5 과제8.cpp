@@ -103,7 +103,7 @@ int equal(node* A, node* B);
 int main() {
 
 	node* testNode1 = make_tree_by_code();
-	printf("순회 알고리즘 테스트를 합니다.\n");
+	printf("1. 순회 알고리즘 테스트를 합니다.\n");
 	printf("중위 순회 : ");
 	inorder(testNode1);
 	printf("\n");
@@ -112,6 +112,20 @@ int main() {
 	printf("\n");
 	printf("후위 순회 : ");
 	postorder(testNode1);
+	printf("\n");
+	printf("\n\n");
+
+	printf("2. 복사 알고리즘 테스트를 합니다.\n");
+	printf("복사된 트리의 순회 결과 : \n");
+	node* testNode2 = copy(testNode1);
+	printf("중위 순회 : ");
+	inorder(testNode2);
+	printf("\n");
+	printf("전위 순회 : ");
+	preorder(testNode2);
+	printf("\n");
+	printf("후위 순회 : ");
+	postorder(testNode2);
 	printf("\n");
 
 	return 0;
@@ -191,4 +205,20 @@ void postorder(node* root) {
 		postorder(root->rchild);
 		printf("%d", root->data);
 	}
+}
+
+node* copy(node* root) {
+	
+	node* newNode;
+
+	if (root != NULL) {
+		newNode = get_node(root->data);
+		newNode->lchild = copy(root->lchild);
+		newNode->rchild = copy(root->rchild);
+	}
+	else {
+		newNode = NULL;
+	}
+
+	return newNode;
 }
