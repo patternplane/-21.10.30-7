@@ -57,11 +57,11 @@ node* make_auto_tree(int n);
 // ● 트리 제거 함수
 
 /**
-* 주어진 트리를 반환합니다.
+* 주어진 트리를 제거합니다.
 * 
 * @param tree : 지울 트리의 루트노드를 가리키는 포인터 변수의 주소
 */
-void delete_tree(node** tree);
+void delete_tree(node* tree);
 
 // ● 트리 순회 함수
 
@@ -135,40 +135,45 @@ void show_tree(node* tree);
 int main() {
 
 	printf("1. 순회 알고리즘 테스트를 합니다.\n");
-	node* testNode1 = make_tree_by_code();
-	print_tree(testNode1);
+	node* testTree1 = make_tree_by_code();
+	print_tree(testTree1);
 	printf("\n\n");
 
 	printf("2. 복사 알고리즘 테스트를 합니다.\n");
 	printf("복사된 트리의 순회 결과 : \n");
-	node* testNode2 = copy(testNode1);
-	print_tree(testNode2);
+	node* testTree2 = copy(testTree1);
+	print_tree(testTree2);
 	printf("\n\n");
 
 	printf("3. 동일성 검사 알고리즘 테스트를 합니다.\n");
-	printf("복사된 트리와 원본 트리는 같은가 : %s\n",(equal(testNode1,testNode2))?("true") : ("false"));
-	testNode2->data = 2;
-	printf("루트노드값을 2로 바꾸었을때 결과 : %s\n", (equal(testNode1, testNode2)) ? ("true") : ("false"));
-	testNode2->data = testNode1->data;
-	testNode2->lchild->data = 9;
-	printf("루트의 왼쪽 자식노드값을 9로 바꾸었을때 결과 : %s\n", (equal(testNode1, testNode2)) ? ("true") : ("false"));
+	printf("복사된 트리와 원본 트리는 같은가 : %s\n",(equal(testTree1,testTree2))?("true") : ("false"));
+	testTree2->data = 2;
+	printf("루트노드값을 2로 바꾸었을때 결과 : %s\n", (equal(testTree1, testTree2)) ? ("true") : ("false"));
+	testTree2->data = testTree1->data;
+	testTree2->lchild->data = 9;
+	printf("루트의 왼쪽 자식노드값을 9로 바꾸었을때 결과 : %s\n", (equal(testTree1, testTree2)) ? ("true") : ("false"));
 	printf("\n\n");
 
 	printf("4. swap 알고리즘 테스트를 합니다.\n");
 	printf("swap된 트리의 순회 결과 : \n");
-	node* testNode3 = swap(testNode1);
-	print_tree(testNode3);
+	node* testTree3 = swap(testTree1);
+	print_tree(testTree3);
 	printf("\n\n");
 
 	printf("5. 트리 자동생성 알고리즘 테스트를 합니다.\n");
 	printf("9개의 정수값을 저장하는 트리 생성됨 : \n");
-	node* testNode4 = make_auto_tree(9);
-	print_tree(testNode4);
+	node* testTree4 = make_auto_tree(9);
+	print_tree(testTree4);
 	printf("\n");
 
 	printf("위 트리의 시각화 : \n(특정 노드에서 왼쪽은 부모, 오른쪽은 오른쪽 자식, 아래는 왼쪽 자식)\n");
-	show_tree(testNode4);
+	show_tree(testTree4);
 	printf("\n\n");
+
+	delete_tree(testTree1);
+	delete_tree(testTree2);
+	delete_tree(testTree3);
+	delete_tree(testTree4);
 
 	printf("이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
@@ -261,27 +266,12 @@ node* make_auto_tree(int n) {
 	return newTree;
 }
 
-/**
-* ○ 보조함수 (delete_tree)
-* delete_tree를 재귀적으로 수행하기 위한 재귀함수입니다.
-* 
-* @param tree : 지울 트리의 루트노드 포인터
-*/
-void delete_tree_r(node* tree) {
+void delete_tree(node* tree) {
 	if (tree != NULL) {
-		delete_tree_r(tree->lchild);
-		delete_tree_r(tree->rchild);
+		delete_tree(tree->lchild);
+		delete_tree(tree->rchild);
 		ret_node(tree);
 	}
-}
-
-void delete_tree(node** tree) {
-
-	if (tree != NULL) {
-		delete_tree_r(*tree);
-		*tree = NULL;
-	}
-
 }
 
 void inorder(node* root) {
