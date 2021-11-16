@@ -141,34 +141,68 @@ void show_tree(node* tree);
 
 
 // ■ main
+int search_count;
 
 int main() {
 	srand(time(NULL));
 
-	node* tree = make_bst(10);
+	// make_bst의 실행시간 측정
+	printf("■ make_bst함수의 실행시간을 측정합니다 : \n");
+	int test_nums[5] = { 100,1000,10000,100000,1000000 };
+	clock_t start, end;
+	node* tmp;
+	for (int i = 0; i < 5; i++) {
+		start = clock();
+		tmp = make_bst(test_nums[i]);
+		end = clock();
+		printf("%7d개 노드의 트리 생성시간 : %f\n", test_nums[i], (end - start) / (double)CLOCKS_PER_SEC);
+		printf("노드 수 : %d\n", get_node_count(tmp));
+		printf("높이 : %d\n", get_height(tmp));
+		printf("단말노드 수 : %d\n", get_leaf_count(tmp));
+		delete_tree(tmp);
+	}
+	printf("\n\n");
 
+	// 트리의 생성
+	printf("■ 트리를 생성합니다.\n\n");
+	node* tree = NULL;
+	int nums[10] = {5,3,8,1,9,2,7,10,6,4};
+	for (int i = 0; i < 10; i++)
+		insert(&tree,nums[i],1.0/nums[i]);
 	show_tree(tree);
 	printf("\n\n");
 
-	printf("노드 수 : %d\n",get_node_count(tree));
-	printf("높이 : %d\n", get_height(tree));
-	printf("단말노드 수 : %d\n", get_leaf_count(tree));
-	printf("\n");
-
-	printf("inorder 순회 결과 : \n");
+	// inorder 순회
+	printf("■ inorder 순회 결과 : \n");
 	inorder(tree);
 	printf("\n");
 
+	// search함수 사용하기
 	int key;
-	printf("찾을 데이터의 key값을 입력하세요 : ");
+	printf("■ 찾을 데이터의 key값을 입력하세요 : ");
 	scanf_s("%d",&key);
+	search_count = 0;
 	double* result = search(tree, key);
 	if (result == NULL)
-		printf("항목이 없습니다.\n");
+		printf("■ 항목이 없습니다. (함수 호출 횟수 : %d)\n",search_count);
 	else
-		printf("%d키에 대한 데이터는 %f입니다.\n",key,*search(tree,key));
+		printf("■ %d키에 대한 데이터는 %f입니다. (함수 호출 횟수 : %d)\n",key,*search(tree,key),search_count);
+	printf("\n");
 
-	printf("\n\n이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
+	// 트리의 추가 연산
+	printf("■ 노드 수 : %d\n", get_node_count(tree));
+	printf("■ 높이 : %d\n", get_height(tree));
+	printf("■ 단말노드 수 : %d\n", get_leaf_count(tree));
+	printf("\n");
+
+	// 트리에서 노드 삭제
+	printf("■ 삭제할 데이터의 key값을 입력하세요 : ");
+	scanf_s("%d", &key);
+	withdraw(&tree, key);
+	printf("■ 삭제결과 : \n");
+	inorder(tree);
+
+	printf("\n\n■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
 
@@ -216,6 +250,7 @@ void ret_node(node* remove_node) {
 }
 
 double* search(node* tree, int key) {
+	search_count++;
 	if (!tree) return NULL;
 	if (key == tree->key) return &(tree->value);
 	if (key < tree->key)
