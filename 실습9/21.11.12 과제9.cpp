@@ -382,19 +382,25 @@ blank_data* make_blank_data() {
 	return new_data;
 }
 
-// 공백정보를 추가합니다.
-void blank_add(blank_data* data, unsigned short blank_len, char has_col) {
-	if (data->top == data->len) {
-		data->len += 10;
-		unsigned short* tmp = (unsigned short*)realloc(data->data,data->len * sizeof(unsigned short));
-		if (tmp == NULL) {
-			printf("out of memory");
-			exit(1);
-		}
-		data->data = tmp;
-	}
+// 공백정보를 추가 및 수정합니다.
+void blank_modify(int index, blank_data* data, unsigned short blank_len, char has_col) {
+	if (data->top >= index)
+		(data->data)[index] = (blank_len << 1) + has_col;
 
-	(data->data)[++(data->top)] = (blank_len<<1) + has_col;
+	else {
+		++(data->top);
+
+		if (data->top == data->len) {
+			data->len += 10;
+			unsigned short* tmp = (unsigned short*)realloc(data->data, data->len * sizeof(unsigned short));
+			if (tmp == NULL) {
+				printf("out of memory");
+				exit(1);
+			}
+			data->data = tmp;
+		}
+		(data->data)[data->top] = (blank_len << 1) + has_col;
+	}
 }
 
 /**
@@ -482,14 +488,15 @@ void show_tree_r(int pre_blank, blank_data* blank_info, node* tree) {
 	print_tree_blank(pre_blank, blank_info);
 	
 	// 오른쪽 자식들 출력 및 공백정보 추가
+	int blank_start_index = pre_blank;
 	do {
 		// 자식 출력
 		sprintf_s(buffer, buffer_size,"(%d, %f)", tree->key, tree->value);
 		printf("%s", buffer);
 		push(tree);
-		
+
 		// 공백정보 추가
-		blank_add(blank_info,strlen(buffer),1);
+		blank_modify(blank_start_index++, blank_info, strlen(buffer), ((tree->lchild)?1:0));
 
 		tree = tree->rchild;
 		if (tree == NULL)
@@ -501,14 +508,17 @@ void show_tree_r(int pre_blank, blank_data* blank_info, node* tree) {
 
 	// 방금 돌아본 각 오른쪽 자식들마다 왼쪽 자식들 출력
 	node* child;
-	while ((child = pop(stack_start)) != NULL)
-		if (child->lchild != NULL) {
+	while ((child = pop(stack_start)) != NULL) {
+		if (child->lchild) {
 			// 왼쪽 자식을 출력하기 전에 보기좋게 세로줄 출력해주기
-			print_tree_blank(pre_blank + top + 1, blank_info);
+			// "top - stack_start"이 일반적인 스택에서 top과 동일하다. 공유스택을 사용하기 때문에 이렇게 표현됨.
+			// top에 +1을 해주는 이유는, pop을 하여 child를 꺼내오기 때문에 top이 1만큼 적어지기 때문.
+			print_tree_blank(pre_blank + (top - stack_start + 1) + 1, blank_info);
 			printf("\n");
 
-			show_tree_r(pre_blank + top, blank_info, child->lchild);
+			show_tree_r(pre_blank + (top - stack_start +1), blank_info, child->lchild);
 		}
+	}
 }
 
 void show_tree(node* tree) {
