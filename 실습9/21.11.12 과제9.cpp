@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 
 // ■ 헤더
@@ -28,7 +29,7 @@ node* avail = NULL;
 * 
 * @param key : 새 노드가 가질 키
 * @param data : 새 노드가 가질 값
-* @return 생성된 노드의 포인터
+* @return 생성된 노드의 포인터. 노드는 자식노드를 NULL로 가집니다.
 */
 node* get_node(int key, double data);
 
@@ -203,14 +204,8 @@ void insert(node** tree, int key, double value) {
 
 	node* ptr, *temp = modified_search(*tree, key);
 	if (temp || !(*tree)) {
-		ptr = (node*)malloc(sizeof(node));
-		if (!ptr) {
-			fprintf(stderr, "Insufficient memory");
-			exit(EXIT_FAILURE);
-		}
-		ptr->key = key;
-		ptr->value = value;
-		ptr->lchild = ptr->rchild = NULL;
+		ptr = get_node(key, value);
+
 		if (*tree) {
 			if (key < temp->key) temp->lchild = ptr;
 			else temp->rchild = ptr;
@@ -360,99 +355,183 @@ int get_leaf_count(node* tree) {
 	return get_leaf_count(tree->lchild) + get_leaf_count(tree->rchild);
 }
 
-typedef char boolean;
+// show_tree 함수 구현을 위한 자료구조와 연산 :
+typedef struct struct_blank_data {
+	unsigned short* data; // 가장 최하위 비트는 세로줄을 가지는지 여부를 나타내며, 나머지 15비트는 공백의 길이를 나타냅니다.
+	int len; // 가용 길이
+	int top; // 사용중인 최상위 인덱스
+} blank_data;
 
-struct blank_data {
-	boolean has_line;
-	short blank_len;
-};
+// 공백정보를 생성합니다.
+blank_data* make_blank_data() {
+	blank_data* new_data = (blank_data*)malloc(sizeof(blank_data));
+	if (new_data == NULL) {
+		printf("out of memory");
+		exit(1);
+	}
+
+	new_data->len = 10;
+	new_data->data = (unsigned short*)malloc(new_data->len * sizeof(unsigned short));
+	if (new_data->data == NULL) {
+		printf("out of memory");
+		exit(1);
+	}
+	new_data->top = -1;
+
+	return new_data;
+}
+
+// 공백정보를 추가합니다.
+void blank_add(blank_data* data, unsigned short blank_len, char has_col) {
+	if (data->top == data->len) {
+		data->len += 10;
+		unsigned short* tmp = (unsigned short*)realloc(data->data,data->len * sizeof(unsigned short));
+		if (tmp == NULL) {
+			printf("out of memory");
+			exit(1);
+		}
+		data->data = tmp;
+	}
+
+	(data->data)[++(data->top)] = (blank_len<<1) + has_col;
+}
 
 /**
 * ○ 보조함수 (show_tree)
-* show_tree를 구현할때 사용하는 공백과 세로줄 추가 문자
+* 공백과 세로줄을 출력해줍니다.
 *
-* @param pre_blank : 미리 앞에 띄워야 하는 공백 / 세로줄 총 갯수
-* @param blank_bitmap : 15개 칸 중 어떤 칸에 세로줄을 그어야 하는지 정보를 16비트 플래그로 담아둔 정수
+* @param blank_num : 미리 앞에 띄워야 하는 공백의 수
+* @param blank_data : 공백데이터 구조체
 * @param 작은자리에서부터 15비트만을 사용한다.
 */
-void print_tree_blank(int pre_blank, short blank_bitmap) {
+void print_tree_blank(int blank_num, blank_data* blank_data) {
 	printf(" ");
 
-	for (int i = 0; i < pre_blank; i++) {
-		if ((blank_bitmap >> i) %2)
-			printf("| ");
-		else
+	for (int i = 0; i < blank_num; i++) {
+		if ((blank_data->data)[i] % 2) { // 세로줄을 그어야 한다면
+			int j = 0;
+			for (; j < (blank_data->data)[i] / 2 / 2; j++) // "(blank_data->data)[i] / 2" 은 "공백의 길이"
+				printf(" ");
+			printf("|");
+			j++;
+			for (; j < (blank_data->data)[i] / 2; j++)
+				printf(" ");
+
+			printf(" ");
+		}
+		else { // 세로줄 필요없다면
+			for (int j = 0; j < (blank_data->data)[i] / 2; j++)
+				printf(" ");
+
 			printf("  ");
+		}
 	}
 }
+
+// 공용 스택과 관리 함수
+
+int stack_len;
+node** stack;
+int top;
+
+void push(node* data) {
+	++top;
+
+	// 스택 공간 부족시 재할당
+	if (stack_len == top) {
+		stack_len += 500;
+		node** tmp = (node**)realloc(*stack, (stack_len)*sizeof(node*));
+		if (tmp == NULL) {
+			printf("out of memory");
+			exit(1);
+		}
+		stack = tmp;
+	}
+
+	stack[top] = data;
+}
+
+node* pop(int stack_start) {
+	if (top - stack_start == -1)
+		return NULL;
+
+	return stack[top--];
+}
+
+// 출력 데이터 임시저장 버퍼
+char* buffer;
 
 /**
 * ○ 보조함수 (show_tree)
 * show_tree를 구현하기 위한 재귀적 함수
 * 
 * @param pre_blank : 미리 앞에 띄워둘 공백 + 세로줄 묶음 갯수
-* @param blank_bitmap : 15개 칸 중 어떤 칸에 세로줄을 그어야 하는지 정보를 16비트 플래그로 담아둔 정수
+* @param blank_info : 공백 처리관련 정보를 담은 구조체의 포인터
 * @param tree : 출력할 트리의 루트노드 포인터
 */
-void show_tree_r(int pre_blank,short blank_bitmap, node* tree) {
+void show_tree_r(int pre_blank, blank_data* blank_info, node* tree) {
 	
 	// 특정 노드의 오른쪽 자식은 오른쪽으로 출력하고,
 	// 왼쪽 자식은 아래로 출력한다.
 
-	node* stack[15];
-	int top = -1;
+	int stack_start = top + 1;
 
 	// 미리 앞에 띄워둘 공백과 세로줄들 출력
-	print_tree_blank(pre_blank, blank_bitmap);
+	print_tree_blank(pre_blank, blank_info);
 	
-	// 오른쪽 자식들 출력
-	// "항목-항목"의 출력 규격을 맞추기 위해 가장 첫 항목은 "-"문자를 빼고 출력
-	printf("%d", tree->key);
-	// push
-	stack[++top] = tree;
-	tree = tree->rchild;
-	// 나머지 항목은 "-항목" 형태로 출력
-	for (; tree != NULL; tree = tree->rchild) {
-		printf("-%d", tree->key);
+	// 오른쪽 자식들 출력 및 공백정보 추가
+	do {
+		// 자식 출력
+		sprintf(buffer,"(%d, %f)", tree->key, tree->value);
+		printf("%s", buffer);
+		push(tree);
 		
-		// push
-		if (top == 15) {
-			printf("show_tree : stack over\n");
-			exit(1);
-		}
-		stack[++top] = tree;
-	}
+		// 공백정보 추가
+		blank_add(blank_info,strlen(buffer),1);
+
+		tree = tree->rchild;
+		if (tree == NULL)
+			break;
+
+		printf("-");
+	} while (true);
 	printf("\n");
 
-	// 오른쪽 자식들을 돌아보면서 추가로 체크해야 할 플래그들 기록하기
-	for (int i = 0; i <= top; i++) {
-		// 만약 왼쪽 자식을 가진 노드라면 플래그 세우고,
-		// 그렇지 않다면 플래그 내림
-		if (stack[i]->lchild != NULL)
-			blank_bitmap |= (1 << (i + pre_blank));
-		else
-			blank_bitmap ^= (blank_bitmap & (1 << (i + pre_blank)));
-	}
-
-	// 방금 오른쪽으로 돌아본 각 자식들마다 왼쪽 자식들 출력
-	while (top != -1) {
-		if (stack[top]->lchild != NULL) {
+	// 방금 돌아본 각 오른쪽 자식들마다 왼쪽 자식들 출력
+	node* child;
+	while ((child = pop(stack_start)) != NULL)
+		if (child->lchild != NULL) {
 			// 왼쪽 자식을 출력하기 전에 보기좋게 세로줄 출력해주기
-			print_tree_blank(pre_blank + top+1, blank_bitmap);
+			print_tree_blank(pre_blank + top + 1, blank_info);
 			printf("\n");
 
-			show_tree_r(pre_blank + top, blank_bitmap, stack[top]->lchild);
+			show_tree_r(pre_blank + top, blank_info, child->lchild);
 		}
-		
-		top--;
-	}
 }
 
 void show_tree(node* tree) {
-	
+
 	if (tree == NULL)
 		return;
 
-	show_tree_r(0,0,tree);
+	buffer = (char*)malloc(100 * sizeof(char));
+	if (buffer == NULL) {
+		printf("out of memory");
+		exit(1);
+	}
 
+	stack_len = 500;
+	top = -1;
+	stack = (node**)malloc(stack_len * sizeof(node*));
+	if (stack == NULL) {
+		printf("out of memory");
+		exit(1);
+	}
+
+	blank_data* blank_info = make_blank_data();
+
+	show_tree_r(0, blank_info,tree);
+
+	free(buffer);
+	free(stack);
 }
