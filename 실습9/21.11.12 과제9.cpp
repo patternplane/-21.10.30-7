@@ -63,10 +63,10 @@ void insert(node** tree, int key, double value);
 /**
 * 이진 탐색 트리에서 특정 노드를 삭제합니다.
 *
-* @param tree 노드를 삭제할 이진 탐색 트리
+* @param tree 노드를 삭제할 이진 탐색 트리의 루트노드 포인터 변수의 주소
 * @param key 삭제할 노드의 key값
 */
-void withdraw(node* tree, int key);
+void withdraw(node** tree, int key);
 
 /**
 * 랜덤한 n개의 값을 이진탐색트리로 구성하여 반환합니다.
@@ -191,6 +191,135 @@ void ret_node(node* remove_node) {
 	avail = remove_node;
 }
 
+double* search(node* tree, int key) {
+	if (!tree) return NULL;
+	if (key == tree->key) return &(tree->value);
+	if (key < tree->key)
+		return search(tree->lchild, key);
+	return search(tree->rchild, key);
+}
+
+void insert(node** tree, int key, double value) {
+
+	node* ptr, *temp = modified_search(*tree, key);
+	if (temp || !(*tree)) {
+		ptr = (node*)malloc(sizeof(node));
+		if (!ptr) {
+			fprintf(stderr, "Insufficient memory");
+			exit(EXIT_FAILURE);
+		}
+		ptr->key = key;
+		ptr->value = value;
+		ptr->lchild = ptr->rchild = NULL;
+		if (*tree) {
+			if (key < temp->key) temp->lchild = ptr;
+			else temp->rchild = ptr;
+		}
+		else *tree = ptr;
+	}
+
+}
+
+/**
+* ○ 보조함수 (withdraw)
+* 특정 키값의 노드를 가리키는 노드포인터 변수의 주소를 반환합니다.
+* 
+* @param tree 트리의 루트노드를 가리키는 포인터변수의 주소
+* @param key 찾을 노드의 키값
+* @return 찾으려는 노드를 가리키는 노드포인터 변수의 주소
+*/
+node** search_node_byKey(node** tree, int key) {
+
+	if (!(*tree))
+		return NULL;
+
+	else if ((*tree)->key == key)
+		return tree;
+
+	else if ((*tree)->key > key) 
+		return search_node_byKey(&((*tree)->lchild),key);
+
+	else // (*tree)->key < key
+		return search_node_byKey(&((*tree)->rchild), key);
+	
+}
+
+void withdraw(node** tree, int key) {
+	node** current_node = search_node_byKey(tree,key); // 지울 노드를 가리키는 노드포인터 변수를 찾습니다.
+	if (!current_node)
+		return;
+
+	node* toBeRemoved = *current_node; // 지울 노드를 기억해둡니다.
+
+	node** takedNode; // 빈 자리를 채울 노드를 가리킬 포인터변수의 주소
+	node* tmp;
+	// 1. 왼쪽 자식트리의 최대값 노드로 빈자리를 채울 경우
+	if ((*current_node)->lchild) {
+		// 최대값 노드를 찾고
+		for (takedNode = &((*current_node)->lchild); (*takedNode)->rchild; takedNode = &((*takedNode)->rchild));
+
+		// 해당 노드를 그 자리에서 빼온 뒤
+		tmp = *takedNode;
+		*takedNode = (*takedNode)->lchild;
+		
+		// 빈자리에 노드를 채워줍니다.
+		tmp->lchild = (*current_node)->lchild;
+		tmp->rchild = (*current_node)->rchild;
+		*current_node = tmp;
+	}
+	// 2. 오른쪽 자식트리의 최소값 노드로 빈자리를 채울 경우
+	else if ((*current_node)->rchild) {
+		// 최소값 노드를 찾고
+		for (takedNode = &((*current_node)->rchild); (*takedNode)->lchild; takedNode = &((*takedNode)->lchild));
+
+		// 해당 노드를 그 자리에서 빼온 뒤
+		tmp = *takedNode;
+		*takedNode = (*takedNode)->rchild;
+
+		// 빈자리에 노드를 채워줍니다.
+		tmp->lchild = (*current_node)->lchild;
+		tmp->rchild = (*current_node)->rchild;
+		*current_node = tmp;
+	}
+	// 3. 자식트리가 없어서 걍 지우면 되는 경우
+	else {
+		*current_node = NULL;
+	}
+
+	// 지우려고 했던 노드를 지웁니다.
+	ret_node(toBeRemoved);
+}
+
+node* make_bst(int n) {
+	node* tree = NULL;
+
+	int key;
+	double value;
+	for (int i = 0; i < n; i++) {
+		key = (int)(100000000 * ((double)rand() / (double)0x7fff));
+		value = 1.0 / key;
+		insert(&tree, key, value);
+	}
+
+	return tree;
+}
+
+node* modified_search(node* root, int key) {
+	for (node* ptr = root; ptr != NULL; ) {
+		if (ptr->key == key) // 기존에 존재하는 키를 입력: 중복 오류
+			return NULL;
+		if (key < ptr->key) {
+			if (ptr->lchild == NULL) return ptr; // 부모를 반환
+			else ptr = ptr->lchild;
+		}
+		else { // key > ptr->data
+			if (ptr->rchild == NULL) return ptr; // 부모를 반환
+			else ptr = ptr->rchild;
+		}
+	}
+	return NULL; // root가 NULL일 경우
+}
+
 void delete_tree(node* tree) {
 	if (tree != NULL) {
 		delete_tree(tree->lchild);
@@ -205,6 +334,30 @@ void inorder(node* root) {
 		printf("(%d, %f)",root->key, root->value);
 		inorder(root->rchild);
 	}
+}
+
+int get_node_count(node* tree) {
+	if (!tree)
+		return 0;
+	
+	return get_node_count(tree->lchild) + 1 + get_node_count(tree->rchild);
+}
+
+int get_height(node* tree) {
+	if (!tree)
+		return 0;
+
+	int h1 = get_height(tree->lchild);
+	int h2 = get_height(tree->rchild);
+
+	return 1 + ((h1>h2)?h1:h2);
+}
+
+int get_leaf_count(node* tree) {
+	if (!tree->lchild && !tree->rchild)
+		return 1;
+
+	return get_leaf_count(tree->lchild) + get_leaf_count(tree->rchild);
 }
 
 typedef char boolean;
