@@ -103,27 +103,6 @@ void delete_tree(node* tree);
 */
 void inorder(node* root);
 
-/**
-* 트리를 전위 순회하여 트리를 출력합니다.
-*
-* @param root : 출력할 트리의 루트노드 포인터
-*/
-void preorder(node* root);
-
-/**
-* 트리를 후위 순회하여 트리를 출력합니다.
-*
-* @param root : 출력할 트리의 루트노드 포인터
-*/
-void postorder(node* root);
-
-/**
-* 주어진 트리를 중위, 전위, 후위 순회하여 출력합니다.
-* 
-* @param tree : 출력할 트리의 루트노드 포인터
-*/
-void print_tree(node* tree);
-
 // ● 트리 연산 함수
 
 /**
@@ -223,37 +202,9 @@ void delete_tree(node* tree) {
 void inorder(node* root) {
 	if (root != NULL) {
 		inorder(root->lchild);
-		printf("%d",root->key);
+		printf("(%d, %f)",root->key, root->value);
 		inorder(root->rchild);
 	}
-}
-
-void preorder(node* root) {
-	if (root != NULL) {
-		printf("%d", root->key);
-		preorder(root->lchild);
-		preorder(root->rchild);
-	}
-}
-
-void postorder(node* root) {
-	if (root != NULL) {
-		postorder(root->lchild);
-		postorder(root->rchild);
-		printf("%d", root->key);
-	}
-}
-
-void print_tree(node* tree) {
-	printf("중위 순회 : ");
-	inorder(tree);
-	printf("\n");
-	printf("전위 순회 : ");
-	preorder(tree);
-	printf("\n");
-	printf("후위 순회 : ");
-	postorder(tree);
-	printf("\n");
 }
 
 typedef char boolean;
