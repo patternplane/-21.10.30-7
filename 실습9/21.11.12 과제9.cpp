@@ -26,10 +26,11 @@ node* avail = NULL;
 /**
 * 새 노드를 생성하여 반환합니다.
 * 
+* @param key : 새 노드가 가질 키
 * @param data : 새 노드가 가질 값
 * @return 생성된 노드의 포인터
 */
-node* get_node(int data);
+node* get_node(int key, double data);
 
 /**
 * 입력된 노드를 반환합니다.
@@ -175,7 +176,7 @@ int main() {
 
 // ■ 구현부
 
-node* get_node(int data) {
+node* get_node(int key, double data) {
 
 	node* tmp;
 
@@ -191,7 +192,8 @@ node* get_node(int data) {
 		avail = avail->lchild;
 	}
 
-	tmp->data = data;
+	tmp->key = key;
+	tmp->value = data;
 	tmp->lchild = NULL;
 	tmp->rchild = NULL;
 	return tmp;
@@ -202,7 +204,8 @@ void ret_node(node* remove_node) {
 	if (remove_node == NULL)
 		return;
 
-	remove_node->data = 0;
+	remove_node->value = 0.0;
+	remove_node->key = 0;
 	remove_node->lchild = avail;
 	remove_node->rchild = NULL;
 
@@ -220,14 +223,14 @@ void delete_tree(node* tree) {
 void inorder(node* root) {
 	if (root != NULL) {
 		inorder(root->lchild);
-		printf("%d",root->data);
+		printf("%d",root->key);
 		inorder(root->rchild);
 	}
 }
 
 void preorder(node* root) {
 	if (root != NULL) {
-		printf("%d", root->data);
+		printf("%d", root->key);
 		preorder(root->lchild);
 		preorder(root->rchild);
 	}
@@ -237,7 +240,7 @@ void postorder(node* root) {
 	if (root != NULL) {
 		postorder(root->lchild);
 		postorder(root->rchild);
-		printf("%d", root->data);
+		printf("%d", root->key);
 	}
 }
 
@@ -300,13 +303,13 @@ void show_tree_r(int pre_blank,short blank_bitmap, node* tree) {
 	
 	// 오른쪽 자식들 출력
 	// "항목-항목"의 출력 규격을 맞추기 위해 가장 첫 항목은 "-"문자를 빼고 출력
-	printf("%d", tree->data);
+	printf("%d", tree->key);
 	// push
 	stack[++top] = tree;
 	tree = tree->rchild;
 	// 나머지 항목은 "-항목" 형태로 출력
 	for (; tree != NULL; tree = tree->rchild) {
-		printf("-%d", tree->data);
+		printf("-%d", tree->key);
 		
 		// push
 		if (top == 15) {
