@@ -139,14 +139,28 @@ int get_leaf_count(node* tree);
 */
 void show_tree(node* tree);
 
+node* make_test(int n) {
+	node* tree = NULL;
 
+	int key;
+	double value;
+	for (int i = 0; i < n; i++) {
+		key = rand()/50;
+		value = key;
+		insert(&tree, key, value);
+	}
+
+	return tree;
+}
 // ■ main
 
 int main() {
+	srand(time(NULL));
 
+	node* tree = make_test(500);
+	show_tree(tree);
 
-
-	printf("이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
+	printf("\n\n이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
 
@@ -430,7 +444,7 @@ void print_tree_blank(int blank_num, blank_data* blank_data) {
 			for (int j = 0; j < (blank_data->data)[i] / 2; j++)
 				printf(" ");
 
-			printf("  ");
+			printf(" ");
 		}
 	}
 }
