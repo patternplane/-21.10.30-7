@@ -145,6 +145,7 @@ void show_tree(node* tree);
 int main() {
 
 
+
 	printf("이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
@@ -532,6 +533,8 @@ void show_tree(node* tree) {
 
 	show_tree_r(0, blank_info,tree);
 
+	free(blank_info->data);
+	free(blank_info);
 	free(buffer);
 	free(stack);
 }
