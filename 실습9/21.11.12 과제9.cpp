@@ -145,12 +145,16 @@ void show_tree(node* tree);
 int main() {
 	srand(time(NULL));
 
-	node* tree = make_bst(50);
+	node* tree = make_bst(10);
 	show_tree(tree);
 
 	printf("노드 수 : %d\n",get_node_count(tree));
 	printf("높이 : %d\n", get_height(tree));
 	printf("단말노드 수 : %d\n", get_leaf_count(tree));
+	printf("\n");
+
+	printf("inorder 순회 결과 : \n");
+	inorder(tree);
 
 	printf("\n\n이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
@@ -333,7 +337,7 @@ void delete_tree(node* tree) {
 void inorder(node* root) {
 	if (root != NULL) {
 		inorder(root->lchild);
-		printf("(%d, %f)",root->key, root->value);
+		printf("(%d, %f)\n",root->key, root->value);
 		inorder(root->rchild);
 	}
 }
