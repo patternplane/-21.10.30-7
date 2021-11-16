@@ -139,26 +139,18 @@ int get_leaf_count(node* tree);
 */
 void show_tree(node* tree);
 
-node* make_test(int n) {
-	node* tree = NULL;
 
-	int key;
-	double value;
-	for (int i = 0; i < n; i++) {
-		key = rand()/50;
-		value = key;
-		insert(&tree, key, value);
-	}
-
-	return tree;
-}
 // ■ main
 
 int main() {
 	srand(time(NULL));
 
-	node* tree = make_test(500);
+	node* tree = make_bst(50);
 	show_tree(tree);
+
+	printf("노드 수 : %d\n",get_node_count(tree));
+	printf("높이 : %d\n", get_height(tree));
+	printf("단말노드 수 : %d\n", get_leaf_count(tree));
 
 	printf("\n\n이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
@@ -364,10 +356,15 @@ int get_height(node* tree) {
 }
 
 int get_leaf_count(node* tree) {
-	if (!tree->lchild && !tree->rchild)
+
+	if (!tree)
+		return 0;
+
+	else if (!tree->lchild && !tree->rchild)
 		return 1;
 
-	return get_leaf_count(tree->lchild) + get_leaf_count(tree->rchild);
+	else 
+		return get_leaf_count(tree->lchild) + get_leaf_count(tree->rchild);
 }
 
 // show_tree 함수 구현을 위한 자료구조와 연산 :
