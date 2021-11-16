@@ -146,7 +146,9 @@ int main() {
 	srand(time(NULL));
 
 	node* tree = make_bst(10);
+
 	show_tree(tree);
+	printf("\n\n");
 
 	printf("노드 수 : %d\n",get_node_count(tree));
 	printf("높이 : %d\n", get_height(tree));
@@ -155,6 +157,16 @@ int main() {
 
 	printf("inorder 순회 결과 : \n");
 	inorder(tree);
+	printf("\n");
+
+	int key;
+	printf("찾을 데이터의 key값을 입력하세요 : ");
+	scanf_s("%d",&key);
+	double* result = search(tree, key);
+	if (result == NULL)
+		printf("항목이 없습니다.\n");
+	else
+		printf("%d키에 대한 데이터는 %f입니다.\n",key,*search(tree,key));
 
 	printf("\n\n이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
