@@ -461,6 +461,7 @@ node* pop(int stack_start) {
 
 // 출력 데이터 임시저장 버퍼
 char* buffer;
+int buffer_size;
 
 /**
 * ○ 보조함수 (show_tree)
@@ -483,7 +484,7 @@ void show_tree_r(int pre_blank, blank_data* blank_info, node* tree) {
 	// 오른쪽 자식들 출력 및 공백정보 추가
 	do {
 		// 자식 출력
-		sprintf(buffer,"(%d, %f)", tree->key, tree->value);
+		sprintf_s(buffer, buffer_size,"(%d, %f)", tree->key, tree->value);
 		printf("%s", buffer);
 		push(tree);
 		
@@ -515,7 +516,8 @@ void show_tree(node* tree) {
 	if (tree == NULL)
 		return;
 
-	buffer = (char*)malloc(100 * sizeof(char));
+	buffer_size = 100;
+	buffer = (char*)malloc(buffer_size * sizeof(char));
 	if (buffer == NULL) {
 		printf("out of memory");
 		exit(1);
