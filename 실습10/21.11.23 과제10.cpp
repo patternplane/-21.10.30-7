@@ -13,7 +13,7 @@
 // ● 노드 구조체 정의 및 연결리스트 연산
 
 typedef struct struct_node {
-	int node_num;
+	int data;
 	struct struct_node* next;
 }node;
 
@@ -34,7 +34,51 @@ node* get_node(int node_num);
 */
 void ret_node(node* remove_node);
 
+// ● 그래프 생성
 
+/**
+* 사용자 입력을 받아 그래프를 생성합니다.
+* 
+* @return 생성된 그래프를 표현한 연결리스트 배열
+*/
+node** make_graph();
+
+// ● 그래프 연산
+
+/**
+* 가장 차수가 높은 노드를 찾고, 해당 노드와 인접한 노드들을 출력합니다.
+* 
+* @param graph : 그래프
+* @param node_count : 노드의 수
+*/
+void print_maxDegreeNode(node* graph[],int node_count);
+
+/**
+* 그래프를 DFS 순회합니다.
+* 
+* @param graph : 그래프
+* @param node_count : 노드의 수
+* @param root_node : 신장 트리의 루트노드 번호
+*/
+void DFS(node* graph[], int node_count, int root_node);
+
+/**
+* 그래프를 BFS 순회합니다.
+*
+* @param graph : 그래프
+* @param node_count : 노드의 수
+* @param root_node : 신장 트리의 루트노드 번호
+*/
+void BFS(node* graph[], int node_count, int root_node);
+
+/**
+* 그래프에서 DFS 신장 트리를 찾아 출력합니다.
+*
+* @param graph : 그래프
+* @param node_count : 노드의 수
+* @param root_node : 신장 트리의 루트노드 번호
+*/
+void print_spanningTree(node* graph[], int node_count, int root_node);
 
 
 // ■ main
@@ -70,7 +114,7 @@ node* get_node(int node_num) {
 		avail = avail->next;
 	}
 
-	tmp->node_num = node_num;
+	tmp->data = node_num;
 	tmp->next = NULL;
 	return tmp;
 }
@@ -80,7 +124,7 @@ void ret_node(node* remove_node) {
 	if (remove_node == NULL)
 		return;
 
-	remove_node->node_num = -1;
+	remove_node->data = -1;
 	remove_node->next = avail;
 
 	avail = remove_node;
