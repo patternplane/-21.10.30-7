@@ -235,15 +235,11 @@ void BFS(node* graph[], int node_count, int root_node) {
 
 	node* nodePtr;
 
-	// 루트노드부터 인접노드를 출력하면서 큐에 기입
+	// 루트노드를 출력하면서 큐에 기입
 	printf("%d ", root_node);
 	visit[root_node] = true;
-	for (nodePtr = graph[root_node]; nodePtr != NULL; nodePtr = nodePtr->next) {
-		printf("%d ", nodePtr->data);
-		visit[root_node] = true;
-		rear = (rear + 1) % queueSize; // Queue Add
-		queue[rear] = nodePtr;
-	}
+	rear = (rear + 1) % queueSize; // Queue Add
+	queue[rear] = graph[root_node];
 
 	for (int current_node;front != rear;) {
 		// 큐에서 한 노드를 꺼내어 다시 처리
