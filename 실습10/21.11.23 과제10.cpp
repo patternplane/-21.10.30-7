@@ -86,6 +86,46 @@ void print_spanningTree(node* graph[], int node_count, int root_node);
 
 int main() {
 
+	printf("새 그래프를 생성합니다.\n");
+	printf("노드의 수와 에지들을 입력하세요.\n");
+	int node_count;
+	scanf_s("%d", &node_count);
+	node** graph = make_graph(node_count);
+	printf("\n\n");
+
+	printf("degree가 가장 큰 노드를 찾습니다 : \n");
+	print_maxDegreeNode(graph,node_count);
+	printf("\n\n");
+
+	printf("0 노드부터 DFS를 출력합니다.\n");
+	DFS(graph, node_count, 0);
+	printf("\n");
+	printf("2 노드부터 DFS를 출력합니다.\n");
+	DFS(graph, node_count, 2);
+	printf("\n");
+	printf("4 노드부터 DFS를 출력합니다.\n");
+	DFS(graph, node_count, 4);
+	printf("\n\n");
+
+	printf("1 노드부터 BFS를 출력합니다.\n");
+	BFS(graph, node_count, 1);
+	printf("\n");
+	printf("3 노드부터 BFS를 출력합니다.\n");
+	BFS(graph, node_count, 3);
+	printf("\n");
+	printf("5 노드부터 BFS를 출력합니다.\n");
+	BFS(graph, node_count, 5);
+	printf("\n\n");
+
+	printf("0 노드에서 DFS신장트리를 출력합니다.\n");
+	print_spanningTree(graph, node_count, 0);
+	printf("\n");
+	printf("2 노드에서 DFS신장트리를 출력합니다.\n");
+	print_spanningTree(graph, node_count, 2);
+	printf("\n");
+	printf("4 노드에서 DFS신장트리를 출력합니다.\n");
+	print_spanningTree(graph, node_count, 4);
+	printf("\n\n");
 
 	printf("\n\n■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
@@ -145,6 +185,10 @@ node** make_graph(int node_count) {
 		if (v1 == -1 || v2 == -1)
 			break;
 
+		new_node = get_node(v1);
+		new_node->next = graph[v2];
+		graph[v2] = new_node;
+
 		new_node = get_node(v2);
 		new_node->next = graph[v1];
 		graph[v1] = new_node;
@@ -175,8 +219,12 @@ void print_maxDegreeNode(node* graph[], int node_count) {
 
 	// 결과 출력
 	printf("노드 %d이 최대 차수 %d을 가집니다.\n",max_node, degree);
-	for (nodePtr = graph[max_node]; nodePtr != NULL; nodePtr = nodePtr->next) 
-		printf("%d->",nodePtr->data);
+	for (nodePtr = graph[max_node]; nodePtr != NULL; ) {
+		printf("%d", nodePtr->data);
+		nodePtr = nodePtr->next;
+		if (nodePtr != NULL)
+			printf("->");
+	}
 	printf("\n");
 }
 
@@ -201,13 +249,16 @@ void DFS(node* graph[], int node_count, int root_node) {
 		
 		// 다음 처리해야 하는 노드를 찾는다.
 		nodePtr = graph[current_node];
-		while (nodePtr != NULL && !visit[nodePtr->data]) // 방문하지 않은 인접노드를 찾는다.
+		while (visit[nodePtr->data]) {
 			nodePtr = nodePtr->next;
-		if (nodePtr == NULL) { // 방문하지 않은 인접노드가 없으면서
-			if (top == -1) // 더 이상 처리할 것이 남아있지 않으면 종료
-				break;
-			nodePtr = stack[top--]->next; // 처리할 노드가 남았다면 스택 pop의 다음노드로 가기
+			if (nodePtr == NULL) {
+				if (top == -1) // 더 이상 처리할 것이 남아있지 않으면 종료
+					break;
+				nodePtr = stack[top--]->next; // 처리할 노드가 남았다면 스택 pop의 다음노드로 가기
+			}
 		}
+		if (nodePtr == NULL) // 더 이상 처리할 것이 남아있지 않으면 종료
+			break;
 
 		// 다음 처리해야 하는 노드를 push 후 다시 DFS 처리
 		if (nodePtr->next != NULL) // (굳이 마지막 노드이면 다시 돌아와 처리할 필요 없으므로 스택에 넣지 않는다.)
@@ -222,7 +273,7 @@ void DFS(node* graph[], int node_count, int root_node) {
 void BFS(node* graph[], int node_count, int root_node) {
 	boolean* visit = (boolean*)calloc(node_count, sizeof(boolean));
 	int queueSize = node_count + 1;
-	node** queue = (node**)malloc(queueSize * sizeof(node*));
+	int* queue = (int*)malloc(queueSize * sizeof(int));
 	int front = 0, rear = 0;
 	if (visit == NULL || queue == NULL) {
 		fprintf(stderr, "메모리 공간 할당 실패\n");
@@ -235,18 +286,18 @@ void BFS(node* graph[], int node_count, int root_node) {
 	printf("%d ", root_node);
 	visit[root_node] = true;
 	rear = (rear + 1) % queueSize; // Queue Add
-	queue[rear] = graph[root_node];
+	queue[rear] = root_node;
 
 	for (int current_node;front != rear;) {
 		// 큐에서 한 노드를 꺼내어 다시 처리
 		front = (front + 1) % queueSize; // Queue Delete
-		current_node = queue[rear]->data;
+		current_node = queue[front];
 		for (nodePtr = graph[current_node]; nodePtr != NULL; nodePtr = nodePtr->next) 
 			if (!visit[nodePtr->data]) {
 				printf("%d ", nodePtr->data);
 				visit[nodePtr->data] = true;
 				rear = (rear + 1) % queueSize; // Queue Add
-				queue[rear] = nodePtr;
+				queue[rear] = nodePtr->data;
 			}
 	}
 
@@ -272,15 +323,19 @@ void print_spanningTree(node* graph[], int node_count, int root_node) {
 
 		// 다음 처리해야 하는 노드를 찾는다.
 		nodePtr = graph[current_node];
-		while (nodePtr != NULL && !visit[nodePtr->data]) // 방문하지 않은 인접노드를 찾는다.
+		while (visit[nodePtr->data]) {
 			nodePtr = nodePtr->next;
-		if (nodePtr == NULL) { // 방문하지 않은 인접노드가 없으면서
-			if (top == -1) // 더 이상 처리할 것이 남아있지 않으면 종료
-				break;
-			nodePtr = stack[top--]->next; // 처리할 노드가 남았다면 스택 pop의 다음노드로 가기
+			if (nodePtr == NULL) { // 방문하지 않은 인접노드가 없으면서
+				if (top == -1) // 더 이상 처리할 것이 남아있지 않으면 종료
+					break;
+				nodePtr = stack[top--]->next; // 처리할 노드가 남았다면 스택 pop의 다음노드로 가기
+			}
 		}
-		else // 방문하지 않은 인접노드가 발견되었다면 에지 출력
-			printf("(%d, %d) ", current_node, nodePtr->data);
+		if (nodePtr == NULL) // 더 이상 처리할 것이 남아있지 않으면 종료
+			break;
+		
+		// 에지 출력
+		printf("(%d, %d) ", current_node, nodePtr->data);
 
 		// 다음 처리해야 하는 노드를 push 후 다시 DFS 처리
 		if (nodePtr->next != NULL) // (굳이 마지막 노드이면 다시 돌아와 처리할 필요 없으므로 스택에 넣지 않는다.)
