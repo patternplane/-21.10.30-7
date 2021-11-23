@@ -39,9 +39,10 @@ void ret_node(node* remove_node);
 /**
 * 사용자 입력을 받아 그래프를 생성합니다.
 * 
+* @param node_count : 그래프의 노드 수
 * @return 생성된 그래프를 표현한 연결리스트 배열
 */
-node** make_graph();
+node** make_graph(int node_count);
 
 // ● 그래프 연산
 
@@ -84,7 +85,6 @@ void print_spanningTree(node* graph[], int node_count, int root_node);
 // ■ main
 
 int main() {
-	
 
 
 	printf("\n\n■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
@@ -130,13 +130,9 @@ void ret_node(node* remove_node) {
 	avail = remove_node;
 }
 
-node** make_graph() {
+node** make_graph(int node_count) {
 
-	printf("새 그래프를 생성합니다.\n");
-	printf("노드의 수와 에지들을 입력하세요.\n");
-
-	int node_count, v1, v2;
-	scanf_s("%d", &node_count);
+	int v1, v2;
 	node** graph = (node**)calloc(node_count, sizeof(node*));
 	if (graph == NULL) {
 		fprintf(stderr,"메모리 공간 할당 실패\n");
