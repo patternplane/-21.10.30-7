@@ -20,6 +20,37 @@
 */
 int** make_graph(int node_count);
 
+// ● 최단경로 찾기
+
+/**
+* 특정 노드로부터 다른 노드들의 최단경로를 찾습니다.
+* 
+* @param v : 시작 노드
+* @param cost : 간선 정보 (가중치)
+* @param n : 총 노드 수
+* @return 최단 경로를 기록한 배열
+*/
+int* shortestPath(int v, int** cost, int n);
+
+/**
+* 최단경로가 확정되지 않은 노드 중 경로의 비용이 최소인 노드를 찾습니다.
+* 
+* @param found : 노드별로 최단경로가 확정되었는지 여부 기록 배열
+* @param distance : 현재까지 기록된 노드별 최단경로
+* @param n : 총 노드 수
+* @return 노드
+*/
+int choose(short* found, int* distance, int n);
+
+/**
+* 모든 노드들에 대해 다른 노드들과의 최단 경로를 찾습니다.
+* 
+* @param cost : 간선 정보 (가중치)
+* @param n : 총 노드 수
+* @return 노드별 최단 경로를 기록한 배열
+*/
+int** allCosts(int** cost, int n);
+
 // ■ main
 
 int main() {
