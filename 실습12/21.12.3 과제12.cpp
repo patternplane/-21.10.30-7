@@ -80,6 +80,25 @@ void arrayCopy(int mode, double* output, double* base, int n);
 int main() {
 	srand(time(NULL));
 
+	int n;
+	printf("정렬할 배열의 원소 수를 입력하세요 : ");
+	scanf_s("%d",&n);
+	
+	double* arrayA = makeArray(n);
+	double* arrayB = (double*)malloc_s(n * sizeof(double));
+
+	arrayCopy(0, arrayA, arrayB, n);
+	selectSort(arrayB, n);
+	printf("선택 정렬의 결과 : %d\n", sortCheck(arrayB, n));
+
+	arrayCopy(0,arrayA,arrayB,n);
+	insertSort(arrayB,n);
+	printf("삽입 정렬의 결과 : %d\n",sortCheck(arrayB,n));
+
+	arrayCopy(0, arrayA, arrayB, n);
+	quickSort(arrayB, n);
+	printf("빠른 정렬의 결과 : %d\n", sortCheck(arrayB, n));
+
 
 	printf("■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
@@ -138,8 +157,8 @@ void quickSort(double* array, int n) {
 	int top = -1;
 
 	int pivot, front, rear;
-	boundStack[++top] = front;
-	boundStack[++top] = rear;
+	boundStack[++top] = 0;
+	boundStack[++top] = n;
 
 	int i, j;
 	double swap_tmp;
