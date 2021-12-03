@@ -87,6 +87,19 @@ void test1();
 */
 void test2();
 
+/**
+* test3 보조함수 : 역순 삽입 정렬후 좌우반전
+* 
+* @param array : 배열
+* @param n : 항목 수
+*/
+void insertSort_invers(double* array, int n);
+
+/**
+* 역정렬에 강한 정렬방식 테스트
+*/
+void test3();
+
 // ■ main
 
 int main() {
@@ -96,6 +109,7 @@ int main() {
 	printf("사용할 테스트를 입력하세요.\n");
 	printf("1 : 입력받은 n개의 실수에 대해 정렬 알고리즘의 시간을 측정합니다.\n");
 	printf("2 : n의 크기를 키워가며 알고리즘별 시간복잡도를 측정합니다.\n");
+	printf("3 : 내림차순에 대한 역 삽입 정렬 알고리즘의 시간복잡도를 측정합니다.\n");
 	scanf_s("%d",&testMode);
 	printf("\n");
 
@@ -105,6 +119,9 @@ int main() {
 		break;
 	case 2:
 		test2();
+		break;
+	case 3:
+		test3();
 		break;
 	default:
 		printf("잘못된 테스트 번호\n");
@@ -334,4 +351,53 @@ void test2() {
 
 	free(arrayA);
 	free(arrayB);
+}
+
+void insertSort_invers(double* array, int n) {
+	double currentItem;
+	int i, j;
+
+	for (i = 1; i < n; i++) {
+		currentItem = array[i];
+		for (j = i - 1; j >= 0 && currentItem > array[j]; j--)
+			array[j + 1] = array[j];
+		array[++j] = currentItem;
+	}
+
+	// inverse
+	double swap_tmp;
+	for (int i = 0; i < (n - 1) - i; i++) {
+		swap_tmp = array[i];
+		array[i] = array[n - 1 - i];
+		array[n - 1 - i] = swap_tmp;
+	}
+}
+
+void test3() {
+	int n;
+	printf("정렬할 배열의 원소 수를 입력하세요 : ");
+	scanf_s("%d", &n);
+	printf("\n");
+
+	double* arrayA = makeArray(n);
+	double* arrayB = (double*)malloc_s(n * sizeof(double));
+
+	clock_t start, end;
+	printf("%d개 내림차순 실수들을 역 삽입 정렬하는 시간 측정\n",n);
+		
+	arrayCopy(2, arrayB, arrayA, n);
+	start = clock();
+	insertSort_invers(arrayB, n);
+	end = clock();
+	if (sortCheck(arrayB, n))
+		printf("역 삽입 정렬 : %0.3f초\n", (end - start) / (double)CLOCKS_PER_SEC);
+	else
+		printf("역 삽입 정렬 오류! 정렬되지 않았습니다.\n");
+		
+	printf("\n");
+	
+
+	free(arrayA);
+	free(arrayB);
+
 }
