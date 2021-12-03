@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 // ■ 헤더
@@ -13,6 +14,16 @@
 // ● 동적할당
 
 void* malloc_s(size_t size);
+
+// ● 실수 배열 생성
+
+/**
+* 랜덤 실수 배열을 생성합니다.
+* 
+* @param n : 배열의 크기
+* @return 배열
+*/
+double* makeArray(int n);
 
 // ● 정렬 알고리즘
 
@@ -67,6 +78,7 @@ void arrayCopy(int mode, double* output, double* base, int n);
 // ■ main
 
 int main() {
+	srand(time(NULL));
 
 
 	printf("■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
@@ -85,6 +97,13 @@ void* malloc_s(size_t size) {
 		exit(1);
 	}
 	return tmp;
+}
+
+double* makeArray(int n) {
+	double* array = (double*)malloc_s(n*sizeof(double));
+	for (int i = 0; i < n; i++)
+		array[i] = (rand() / (0x7fff * 1.0)) * 100000000;
+	return array;
 }
 
 void selectSort(double* array, int n) {
