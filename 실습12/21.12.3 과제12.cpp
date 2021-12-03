@@ -34,6 +34,7 @@ void insertSort(double* array, int n);
 
 /**
 * 빠른 정렬
+* 비재귀로 구현되었습니다.
 *
 * @param array : 배열
 * @param n : 항목 수
@@ -84,4 +85,104 @@ void* malloc_s(size_t size) {
 		exit(1);
 	}
 	return tmp;
+}
+
+void selectSort(double* array, int n) {
+	double tmp;
+
+	int minIndex = 0;
+	for (int i = 0; i < n-1; i++) {
+		for (int j = i + 1; j < n; j++)
+			if (array[minIndex] > array[j])
+				minIndex = j;
+		tmp = array[minIndex];
+		array[minIndex] = array[i];
+		array[i] = tmp;
+	}
+
+}
+
+void insertSort(double* array, int n) {
+	double currentItem;
+	int i, j;
+
+	for (i = 1; i < n; i++) {
+		currentItem = array[i];
+		for (j = i - 1; j >= 0 && currentItem < array[j]; j--)
+			array[j+1] = array[j];
+		array[++j] = currentItem;
+	}
+}
+
+void quickSort(double* array, int n) {
+	int* boundStack = (int*)malloc_s(n*sizeof(n));
+	int top = -1;
+
+	int pivot, front, rear;
+	boundStack[++top] = front;
+	boundStack[++top] = rear;
+
+	int i, j;
+	double swap_tmp;
+	while (top != -1) {
+		// Current Recursive
+		front = boundStack[top--];
+		rear = boundStack[top--];
+
+		// Quick Sort
+		pivot = front++;
+		i = front, j = rear;
+		while (true) {
+			while (i < j && array[i] < array[pivot])
+				i++;
+			while (array[j] > array[pivot])
+				j--;
+			if (i < j) {
+				swap_tmp = array[i];
+				array[i] = array[j];
+				array[j] = swap_tmp;
+			}	
+			else
+				break;
+		}
+		swap_tmp = array[i - 1];
+		array[i - 1] = array[pivot];
+		array[pivot] = swap_tmp;
+
+		// Record Next recursive
+		if (front < (i - 2)) {
+			boundStack[++top] = front;
+			boundStack[++top] = i - 2;
+		}
+		if (i < rear) {
+			boundStack[++top] = i;
+			boundStack[++top] = rear;
+		}
+	}
+
+	free(boundStack);
+}
+
+int sortCheck(double* array, int n) {
+	for (int i = 0; i < n - 1; i++)
+		if (array[i] > array[i + 1])
+			return 0;
+	return 1;
+}
+
+void arrayCopy(int mode, double* output, double* base, int n) {
+	for (int i = 0; i < n; i++)
+		output[i] = base[i];
+
+	if (mode == 1 || mode == 2) {
+		quickSort(output, n); // mode 1 : Ascending sort
+		if (mode == 2) { // mode 2 : Descending sort
+			double swap_tmp;
+			for (int i = 0; i < n - i; i++) {
+				swap_tmp = output[i];
+				output[i] = output[n - i];
+				output[n - i] = swap_tmp;
+			}
+		}
+	}
 }
