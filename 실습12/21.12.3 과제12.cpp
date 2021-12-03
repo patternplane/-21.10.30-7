@@ -75,56 +75,46 @@ int sortCheck(double* array, int n);
 */
 void arrayCopy(int mode, double* output, double* base, int n);
 
+// ● 테스트 함수
+
+/**
+* n개의 실수를 생성하여 각 정렬알고리즘의 시간 측정
+*/
+void test1();
+
+/**
+* 각 정렬 알고리즘별 시간복잡도 측정
+*/
+void test2();
+
 // ■ main
 
 int main() {
 	srand(time(NULL));
 
-	int n;
-	printf("정렬할 배열의 원소 수를 입력하세요 : ");
-	scanf_s("%d",&n);
+	int testMode;
+	printf("사용할 테스트를 입력하세요.\n");
+	printf("1 : 입력받은 n개의 실수에 대해 정렬 알고리즘의 시간을 측정합니다.\n");
+	printf("2 : n의 크기를 키워가며 알고리즘별 시간복잡도를 측정합니다.\n");
+	scanf_s("%d",&testMode);
 	printf("\n");
 
-	double* arrayA = makeArray(n);
-	double* arrayB = (double*)malloc_s(n * sizeof(double));
-
-	void (*sortAlgorithm[3])(double*, int) = {
-		selectSort,
-		insertSort,
-		quickSort
-	};
-	const char* userInfo[3] = {
-		"1. 무작위로 배열된 실수들의 정렬 시간 측정\n",
-		"2. 오름차순 배열된 실수들의 정렬 시간 측정\n",
-		"3. 내림차순 배열된 실수들의 정렬 시간 측정\n"
-	};
-	const char* sortName[3] = {
-		"선택",
-		"삽입",
-		"빠른"
-	};
-	clock_t start, end;
-	for (int i = 0; i < 3; i++) {
-		printf("%s",userInfo[i]);
-		for (int j = 0; j < 3; j++) {
-			arrayCopy(i, arrayB, arrayA, n);
-			start = clock();
-			(sortAlgorithm[j])(arrayB, n);
-			end = clock();
-			if (sortCheck(arrayB, n))
-				printf("%s 정렬 : %f초\n", sortName[j], (end - start) / (double)CLOCKS_PER_SEC);
-			else
-				printf("%s정렬 오류! 정렬되지 않았습니다.\n", sortName[j]);
-		}
-		printf("\n");
+	switch (testMode) {
+	case 1 :
+		test1();
+		break;
+	case 2:
+		test2();
+		break;
+	default:
+		printf("잘못된 테스트 번호\n");
 	}
+	printf("\n");
 
 	printf("■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
 
-	free(arrayA);
-	free(arrayB);
 	return 0;
 }
 
@@ -245,4 +235,103 @@ void arrayCopy(int mode, double* output, double* base, int n) {
 			}
 		}
 	}
+}
+
+void (*sortAlgorithm[3])(double*, int) = {
+		selectSort,
+		insertSort,
+		quickSort
+};
+const char* sortName[3] = {
+	"선택",
+	"삽입",
+	"빠른"
+};
+const char* arrayMode[3] = {
+	"무작위",
+	"오름차순",
+	"내림차순"
+};
+
+void test1() {
+
+	int n;
+	printf("정렬할 배열의 원소 수를 입력하세요 : ");
+	scanf_s("%d", &n);
+	printf("\n");
+
+	double* arrayA = makeArray(n);
+	double* arrayB = (double*)malloc_s(n * sizeof(double));
+
+	clock_t start, end;
+	for (int i = 0; i < 3; i++) {
+		printf("%d. %s 배열된 실수들의 정렬 시간 측정\n",i+1, arrayMode[i]);
+		for (int j = 0; j < 3; j++) {
+			arrayCopy(i, arrayB, arrayA, n);
+			start = clock();
+			(sortAlgorithm[j])(arrayB, n);
+			end = clock();
+			if (sortCheck(arrayB, n))
+				printf("%s 정렬 : %0.3f초\n", sortName[j], (end - start) / (double)CLOCKS_PER_SEC);
+			else
+				printf("%s정렬 오류! 정렬되지 않았습니다.\n", sortName[j]);
+		}
+		printf("\n");
+	}
+
+	free(arrayA);
+	free(arrayB);
+}
+
+void test2() {
+
+	const int testCase_len = 16;
+	int testCase[testCase_len] = {
+		1000,
+		5000,
+		10000,
+		25000,
+		50000,
+		75000,
+		100000,
+		200000,
+		300000,
+		400000,
+		500000,
+		600000,
+		700000,
+		800000,
+		900000,
+		1000000
+	};
+
+	double* arrayA = makeArray(testCase[testCase_len-1]);
+	double* arrayB = (double*)malloc_s(testCase[testCase_len - 1] * sizeof(double));
+
+	const char* userInfo[3] = {
+		"1. 선택정렬 알고리즘의 시간복잡도\n",
+		"2. 삽입정렬 알고리즘의 시간복잡도\n",
+		"3. 내림차순 배열된 실수들의 정렬 시간 측정\n"
+	};
+	clock_t start, end;
+	for (int i = 0; i < 3; i++) {
+		printf("%d. %s정렬 알고리즘의 시간복잡도\n",i+1,sortName[i]);
+		for (int j = 0; j < 3; j++) {
+			printf("%d. %s 배열일때\n",j+1, arrayMode[j]);
+			for (int k = 0; k < testCase_len; k++) {
+				arrayCopy(j, arrayB, arrayA, testCase[k]);
+				start = clock();
+				(sortAlgorithm[k])(arrayB, testCase[k]);
+				end = clock();
+				if (sortCheck(arrayB, testCase[k]))
+					printf("%s 정렬 | %7d개 : %0.3f초\n", sortName[k], testCase[k], (end - start) / (double)CLOCKS_PER_SEC);
+				else
+					printf("%s정렬 오류! 정렬되지 않았습니다.\n", sortName[k]);
+			}
+		}
+		printf("\n");
+	}
+
+	free(arrayA);
+	free(arrayB);
 }
