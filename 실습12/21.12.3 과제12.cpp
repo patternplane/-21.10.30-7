@@ -321,10 +321,10 @@ void test2() {
 			for (int k = 0; k < testCase_len; k++) {
 				arrayCopy(j, arrayB, arrayA, testCase[k]);
 				start = clock();
-				(sortAlgorithm[k])(arrayB, testCase[k]);
+				(sortAlgorithm[j])(arrayB, testCase[k]);
 				end = clock();
 				if (sortCheck(arrayB, testCase[k]))
-					printf("%s 정렬 | %7d개 : %0.3f초\n", sortName[k], testCase[k], (end - start) / (double)CLOCKS_PER_SEC);
+					printf("%s 정렬 | %7d개 : %0.3f초\n", sortName[j], testCase[k], (end - start) / (double)CLOCKS_PER_SEC);
 				else
 					printf("%s정렬 오류! 정렬되지 않았습니다.\n", sortName[k]);
 			}
