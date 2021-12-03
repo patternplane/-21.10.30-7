@@ -83,27 +83,48 @@ int main() {
 	int n;
 	printf("정렬할 배열의 원소 수를 입력하세요 : ");
 	scanf_s("%d",&n);
-	
+	printf("\n");
+
 	double* arrayA = makeArray(n);
 	double* arrayB = (double*)malloc_s(n * sizeof(double));
 
-	arrayCopy(0, arrayA, arrayB, n);
-	selectSort(arrayB, n);
-	printf("선택 정렬의 결과 : %d\n", sortCheck(arrayB, n));
-
-	arrayCopy(0,arrayA,arrayB,n);
-	insertSort(arrayB,n);
-	printf("삽입 정렬의 결과 : %d\n",sortCheck(arrayB,n));
-
-	arrayCopy(0, arrayA, arrayB, n);
-	quickSort(arrayB, n);
-	printf("빠른 정렬의 결과 : %d\n", sortCheck(arrayB, n));
-
+	void (*sortAlgorithm[3])(double*, int) = {
+		selectSort,
+		insertSort,
+		quickSort
+	};
+	const char* userInfo[3] = {
+		"1. 무작위로 배열된 실수들의 정렬 시간 측정\n",
+		"2. 오름차순 배열된 실수들의 정렬 시간 측정\n",
+		"3. 내림차순 배열된 실수들의 정렬 시간 측정\n"
+	};
+	const char* sortName[3] = {
+		"선택",
+		"삽입",
+		"빠른"
+	};
+	clock_t start, end;
+	for (int i = 0; i < 3; i++) {
+		printf("%s",userInfo[i]);
+		for (int j = 0; j < 3; j++) {
+			arrayCopy(i, arrayB, arrayA, n);
+			start = clock();
+			(sortAlgorithm[j])(arrayB, n);
+			end = clock();
+			if (sortCheck(arrayB, n))
+				printf("%s 정렬 : %f초\n", sortName[j], (end - start) / (double)CLOCKS_PER_SEC);
+			else
+				printf("%s정렬 오류! 정렬되지 않았습니다.\n", sortName[j]);
+		}
+		printf("\n");
+	}
 
 	printf("■ 이상 프로그램을 종료합니다.\n진행하려면 아무 숫자나 입력 : ");
 	int final_exit_answer;
 	scanf_s("%d", &final_exit_answer);
 
+	free(arrayA);
+	free(arrayB);
 	return 0;
 }
 
@@ -128,8 +149,9 @@ double* makeArray(int n) {
 void selectSort(double* array, int n) {
 	double tmp;
 
-	int minIndex = 0;
+	int minIndex;
 	for (int i = 0; i < n-1; i++) {
+		minIndex = i;
 		for (int j = i + 1; j < n; j++)
 			if (array[minIndex] > array[j])
 				minIndex = j;
@@ -153,25 +175,25 @@ void insertSort(double* array, int n) {
 }
 
 void quickSort(double* array, int n) {
-	int* boundStack = (int*)malloc_s(n*sizeof(n));
+	int* boundStack = (int*)malloc_s((n+1) * sizeof(n));
 	int top = -1;
 
 	int pivot, front, rear;
 	boundStack[++top] = 0;
-	boundStack[++top] = n;
+	boundStack[++top] = n - 1;
 
 	int i, j;
 	double swap_tmp;
 	while (top != -1) {
 		// Current Recursive
-		front = boundStack[top--];
 		rear = boundStack[top--];
+		front = boundStack[top--];
 
 		// Quick Sort
-		pivot = front++;
-		i = front, j = rear;
+		pivot = front;
+		i = front+1, j = rear;
 		while (true) {
-			while (i < j && array[i] < array[pivot])
+			while (i <= j && array[i] <= array[pivot])
 				i++;
 			while (array[j] > array[pivot])
 				j--;
@@ -216,10 +238,10 @@ void arrayCopy(int mode, double* output, double* base, int n) {
 		quickSort(output, n); // mode 1 : Ascending sort
 		if (mode == 2) { // mode 2 : Descending sort
 			double swap_tmp;
-			for (int i = 0; i < n - i; i++) {
+			for (int i = 0; i < (n - 1) - i; i++) {
 				swap_tmp = output[i];
-				output[i] = output[n - i];
-				output[n - i] = swap_tmp;
+				output[i] = output[(n - 1) - i];
+				output[(n - 1) - i] = swap_tmp;
 			}
 		}
 	}
